@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  title: URL Link Shortener API
+  description: API for managing short URLs and user accounts.
+  version: "1.0.0"
+  contact:
+    name: "API Support"
+    url: "https://cs3103.cs.unb.ca/hhong/project/support"
+    email: "leo.hong@unb.ca"
+servers:
+  - url: "https://cs3103.cs.unb.ca/hhong/project/api"
+paths:
+  /users:
+    post:
+      summary: Registers a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginCredentials"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCreatedResponse"
+        "400":
+          description: Invalid input
+  /users/login:
+    post:
+      summary: Authenticates a user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginCredentials"
+      responses:
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Authentication failed
+  /users/{userId}/links:
+    get:
+      summary: Retrieves all links created by a specific user
+      tags:
+        - Links
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Link"
+        "404":
+          description: User not found
+  /links:
+    post:
+      summary: Creates a new short link
+      tags:
+        - Links
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewLinkRequest"
+      responses:
+        "201":
+          description: Link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Link"
+        "400":
+          description: Invalid input
+  /links/{linkId}:
+    delete:
+      summary: Deletes a specific link
+      tags:
+        - Links
+      parameters:
+        - in: path
+          name: linkId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Link deleted successfully
+        "404":
+          description: Link not found
+  /links/shortcut/{shortcut}:
+    get:
+      summary: Retrieves the original URL by shortcut
+      tags:
+        - Links
+      parameters:
+        - in: path
+          name: shortcut
+          required: true
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirect to the destination URL
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                description: URL to redirect to
+        "404":
+          description: Shortcut not found
+components:
+  schemas:
+    UserCreatedResponse:
+      type: object
+      properties:
+        username:
+          type: string
+      required:
+        - username
+    LoginCredentials:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+    NewLinkRequest:
+      type: object
+      properties:
+        destination:
+          type: string
+          format: uri
+        userId:
+          type: string
+          nullable: true
+      required:
+        - destination
+    Link:
+      type: object
+      properties:
+        linkId:
+          type: string
+        destination:
+          type: string
+        shortcut:
+          type: string
+        userId:
+          type: string
+          nullable: true
+      required:
+        - linkId
+        - destination
+        - shortcut
