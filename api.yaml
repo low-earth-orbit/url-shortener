@@ -60,7 +60,7 @@ paths:
           name: userId
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         "200":
           description: Successfully retrieved
@@ -102,7 +102,7 @@ paths:
           name: linkId
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         "204":
           description: Link deleted successfully
@@ -163,7 +163,7 @@ components:
           type: string
           format: uri
         userId:
-          type: string
+          type: integer
           nullable: true
       required:
         - destination
@@ -171,13 +171,13 @@ components:
       type: object
       properties:
         linkId:
-          type: string
+          type: integer
         destination:
           type: string
         shortcut:
           type: string
         userId:
-          type: string
+          type: integer
           nullable: true
       required:
         - linkId
