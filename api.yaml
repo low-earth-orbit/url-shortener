@@ -30,6 +30,8 @@ paths:
                 $ref: "#/components/schemas/UserCreatedResponse"
         "400":
           description: Invalid input
+        "409":
+          description: Username already exists
   /users/login:
     post:
       summary: Authenticates a user
@@ -60,7 +62,7 @@ paths:
           name: userId
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         "200":
           description: Successfully retrieved
@@ -102,12 +104,14 @@ paths:
           name: linkId
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         "204":
           description: Link deleted successfully
         "404":
           description: Link not found
+        "403":
+          description: User not authorized to delete this link
   /links/shortcut/{shortcut}:
     get:
       summary: Retrieves the original URL by shortcut
@@ -163,7 +167,7 @@ components:
           type: string
           format: uri
         userId:
-          type: string
+          type: integer
           nullable: true
       required:
         - destination
@@ -171,13 +175,13 @@ components:
       type: object
       properties:
         linkId:
-          type: string
+          type: integer
         destination:
           type: string
         shortcut:
           type: string
         userId:
-          type: string
+          type: integer
           nullable: true
       required:
         - linkId
