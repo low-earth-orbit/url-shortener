@@ -30,6 +30,8 @@ paths:
                 $ref: "#/components/schemas/UserCreatedResponse"
         "400":
           description: Invalid input
+        "409":
+          description: Username already exists
   /users/login:
     post:
       summary: Authenticates a user
@@ -108,6 +110,8 @@ paths:
           description: Link deleted successfully
         "404":
           description: Link not found
+        "403":
+          description: User not authorized to delete this link
   /links/shortcut/{shortcut}:
     get:
       summary: Retrieves the original URL by shortcut
