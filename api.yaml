@@ -12,7 +12,7 @@ servers:
 paths:
   /users/login:
     post:
-      summary: Authenticates a user via LDAP and checks, checks or adds to the local database and initiates a session
+      summary: Authenticates a user via LDAP, checks the local database and initiates a session
       tags:
         - Users
       requestBody:
