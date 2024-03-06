@@ -12,7 +12,7 @@ servers:
 paths:
   /users/login:
     post:
-      summary: Authenticates a user via LDAP and checks/adds them in the local database
+      summary: Authenticates a user via LDAP, checks the local database and initiates a session
       tags:
         - Users
       requestBody:
@@ -23,20 +23,38 @@ paths:
               $ref: "#/components/schemas/LoginCredentials"
       responses:
         "200":
-          description: Authentication successful
+          description: Authentication successful. Session initiated.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthResponse"
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                    description: A session identifier for the authenticated user.
+                  userId:
+                    type: integer
+                    description: The userId of the authenticated user in the local database.
+                required:
+                  - sessionId
+                  - userId
+          headers:
+            Set-Cookie:
+              description: Session cookie with HttpOnly; Secure attributes.
+              schema:
+                type: string
+                example: "sessionId=abc123; Path=/; HttpOnly; Secure"
         "401":
           description: Authentication failed. Invalid username or password.
         "500":
           description: Internal server error, e.g., LDAP server is not reachable.
 /users/logout:
   post:
-    summary: Logs out a user
+    summary: Logs out the current user and invalidates the session
     tags:
       - Users
+    security:
+      - sessionAuth: []
     requestBody:
       required: true
       content:
@@ -45,22 +63,30 @@ paths:
             $ref: "#/components/schemas/LogoutRequest"
     responses:
       "200":
-        description: Logout successful
-      "401":
-        description: Not logged in
-      "500":
-        description: Internal server error  
+        description: Logout successful. Session invalidated.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "You have been logged out successfully."
+        headers:
+          Set-Cookie:
+            description: Clears the session cookie.
+            schema:
+              type: string
+        description: Unauthorized. No active session found.       
+        
   /users/{userId}/links:
+  /users/links:
     get:
       summary: Retrieves all links created by a specific user
       tags:
         - Links
-      parameters:
-        - in: path
-          name: userId
-          required: true
-          schema:
-            type: integer
+      security:
+        - sessionAuth: []
       responses:
         "200":
           description: Successfully retrieved
@@ -72,11 +98,15 @@ paths:
                   $ref: "#/components/schemas/Link"
         "404":
           description: User not found
+        "403":
+          description: User not authorized to retrieve links
   /links:
     post:
       summary: Creates a new short link
       tags:
         - Links
+      security:
+        - sessionAuth: []
       requestBody:
         required: true
         content:
@@ -97,6 +127,8 @@ paths:
       summary: Deletes a specific link
       tags:
         - Links
+      security:
+        - sessionAuth: []
       parameters:
         - in: path
           name: linkId
@@ -112,7 +144,7 @@ paths:
           description: User not authorized to delete this link
   /links/shortcut/{shortcut}:
     get:
-      summary: Retrieves the original URL by shortcut
+      summary: Retrieves the destination URL
       tags:
         - Links
       parameters:
@@ -133,14 +165,12 @@ paths:
         "404":
           description: Shortcut not found
 components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionId
   schemas:
-    UserCreatedResponse:
-      type: object
-      properties:
-        username:
-          type: string
-      required:
-        - username
     LoginCredentials:
       type: object
       properties:
@@ -151,34 +181,32 @@ components:
       required:
         - username
         - password 
-    LogoutRequest:
-      type: object
-      properties:
-        userId:
-          type: integer
-      required:
-        - userId
-    AuthResponse:
-      type: object
-      properties:
-        userId:
-          type: integer
-          description: The local user ID assigned to the LDAP user.
-        username:
-          type: string
-          description: The username of the authenticated user.
-      required:
-        - userId
-        - username
+ LogoutRequest:
+  type: object
+  properties:
+    userId:
+      type: integer
+  required:
+    - userId
+AuthResponse:
+  type: object
+  properties:
+    userId:
+      type: integer
+      description: The local user ID assigned to the LDAP user.
+    username:
+      type: string
+      description: The username of the authenticated user.
+  required:
+    - userId
+    - username   
+
     NewLinkRequest:
       type: object
       properties:
         destination:
           type: string
           format: uri
-        userId:
-          type: integer
-          nullable: true
       required:
         - destination
     Link:
@@ -192,8 +220,8 @@ components:
           type: string
         userId:
           type: integer
-          nullable: true
       required:
         - linkId
         - destination
         - shortcut
+        - userId
