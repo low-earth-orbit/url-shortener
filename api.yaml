@@ -32,6 +32,24 @@ paths:
           description: Authentication failed. Invalid username or password.
         "500":
           description: Internal server error, e.g., LDAP server is not reachable.
+/users/logout:
+  post:
+    summary: Logs out a user
+    tags:
+      - Users
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LogoutRequest"
+    responses:
+      "200":
+        description: Logout successful
+      "401":
+        description: Not logged in
+      "500":
+        description: Internal server error  
   /users/{userId}/links:
     get:
       summary: Retrieves all links created by a specific user
@@ -132,7 +150,14 @@ components:
           type: string
       required:
         - username
-        - password
+        - password 
+    LogoutRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+      required:
+        - userId
     AuthResponse:
       type: object
       properties:
