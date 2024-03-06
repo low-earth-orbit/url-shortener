@@ -10,31 +10,9 @@ info:
 servers:
   - url: "https://cs3103.cs.unb.ca/hhong/project/api"
 paths:
-  /users:
-    post:
-      summary: Registers a new user
-      tags:
-        - Users
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginCredentials"
-      responses:
-        "201":
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserCreatedResponse"
-        "400":
-          description: Invalid input
-        "409":
-          description: Username already exists
   /users/login:
     post:
-      summary: Authenticates a user
+      summary: Authenticates a user via LDAP and checks/adds them in the local database
       tags:
         - Users
       requestBody:
@@ -51,7 +29,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthResponse"
         "401":
-          description: Authentication failed
+          description: Authentication failed. Invalid username or password.
+        "500":
+          description: Internal server error, e.g., LDAP server is not reachable.
   /users/{userId}/links:
     get:
       summary: Retrieves all links created by a specific user
@@ -156,10 +136,15 @@ components:
     AuthResponse:
       type: object
       properties:
-        token:
+        userId:
+          type: integer
+          description: The local user ID assigned to the LDAP user.
+        username:
           type: string
+          description: The username of the authenticated user.
       required:
-        - token
+        - userId
+        - username
     NewLinkRequest:
       type: object
       properties:
