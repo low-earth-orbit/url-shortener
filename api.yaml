@@ -48,7 +48,7 @@ paths:
           description: Authentication failed. Invalid username or password.
         "500":
           description: Internal server error, e.g., LDAP server is not reachable.
-          /users/logout:
+  /users/logout:
     post:
       summary: Logs out the current user and invalidates the session
       tags:
