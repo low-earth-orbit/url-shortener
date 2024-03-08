@@ -48,6 +48,32 @@ paths:
           description: Authentication failed. Invalid username or password.
         "500":
           description: Internal server error, e.g., LDAP server is not reachable.
+  /users/logout:
+    post:
+      summary: Logs out the current user and invalidates the session
+      tags:
+        - Users
+      security:
+        - sessionAuth: []
+      responses:
+        "200":
+          description: Logout successful. Session invalidated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "You have been logged out successfully."
+          headers:
+            Set-Cookie:
+              description: Clears the session cookie.
+              schema:
+                type: string
+                example: "sessionId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure"
+        "401":
+          description: Unauthorized. No active session found.
   /users/links:
     get:
       summary: Retrieves all links created by a specific user
