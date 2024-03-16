@@ -224,7 +224,7 @@ class CreateShortcut(Resource):
 
 class DeleteLink(Resource):
     def delete(self, link_id):
-        if 'username' not in session:
+        if 'user_id' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
         user_id = session.get('user_id')
