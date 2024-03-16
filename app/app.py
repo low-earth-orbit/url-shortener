@@ -96,7 +96,7 @@ class Login(Resource):
         parser = reqparse.RequestParser()
         try:
             # Required attributes in the JSON document
-            parser.add_argument('username', type=str, required=True)
+            parser.add_argument('user_id', type=str, required=True)
             parser.add_argument('password', type=str, required=True)
             request_params = parser.parse_args()
         except:
