@@ -119,7 +119,7 @@ class Login(Resource):
             # Check if user exists in local database and/or add them
             conn = get_db_connection()
             with conn.cursor() as cursor:
-                cursor.callproc('addUser', [request_params['username']])
+                cursor.callproc('addUser', [request_params['user_id']])
                 conn.commit()  # Commit to save any changes
 
                 # Fetch the user_id of the authenticated user
@@ -143,8 +143,8 @@ class Login(Resource):
     # Example curl command:
     # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar http://cs3103.cs.unb.ca:8042/login
     def get(self):
-        if 'username' in session:
-            username = session['username']
+        if 'user_id' in session:
+            user_id = session['user_id']
             response = {'status': 'success'}
             responseCode = 200
         else:
@@ -159,8 +159,8 @@ class Logout(Resource):
     # Example
     # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar http://cs3103.cs.unb.ca:8042/logout
     def delete(self):
-        if 'username' in session:
-            session.pop('username', None)
+        if 'user_id' in session:
+            session.pop('user_id', None)
             response = {'status': 'success'}
             responseCode = 200
         else:
