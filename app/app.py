@@ -103,7 +103,7 @@ class Login(Resource):
             abort(400)  # bad request
 
         # If the user is already logged in
-        if 'username' in session and session['username'] == request_params['username']:
+        if 'user_id' in session:
             return jsonify({'status': 'Already logged in'})
 
         try:
@@ -119,7 +119,7 @@ class Login(Resource):
             # Check if user exists in local database and/or add them
             conn = get_db_connection()
             with conn.cursor() as cursor:
-                cursor.callproc('addUser', [request_params['user_id']])
+                cursor.callproc('addUser', [request_params['username']])
                 conn.commit()  # Commit to save any changes
 
                 # Fetch the user_id of the authenticated user
