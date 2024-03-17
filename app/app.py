@@ -22,6 +22,8 @@ import validators
 cgitb.enable()
 
 # Function to establish a connection with your MySQL database
+
+
 def get_db_connection():
     conn = pymysql.connect(host=settings.DB_HOST,
                            user=settings.DB_USER,
@@ -83,8 +85,7 @@ class Developer(Resource):
 
 api.add_resource(Developer, '/dev')
 
-# Control Login/ Logout Session
-# Handles Cookie
+# Login
 
 
 class Login(Resource):
@@ -109,53 +110,78 @@ class Login(Resource):
             abort(400)  # bad request
 
         # If the user is already logged in
-        if 'username' in session:
-            return jsonify({'status': 'Already logged in'})
+        if 'username' in session and session['username'] == request_params['username']:
+            return make_response(jsonify({'status': 'OK'}), 200)
 
         try:
-            # LDAP server call for authentication
-            ldapServer = Server(host=settings.LDAP_HOST, use_ssl=True)
+            # Set up LDAP server connection
+            ldapServer = Server(host=settings.LDAP_HOST)
             ldapConnection = Connection(ldapServer,
-                                        user=f'uid={request_params["username"]},ou=People,ou=fcs,o=unb',
+                                        raise_exceptions=True,
+                                        user='uid=' +
+                                        request_params['username'] +
+                                        ', ou=People,ou=fcs,o=unb',
                                         password=request_params['password'])
-            if not ldapConnection.bind():
-                return jsonify({'status': 'LDAP authentication failed'}), 401
+            ldapConnection.open()
+            ldapConnection.start_tls()
+            ldapConnection.bind()  # LDAP authentication
 
-            # Check if user exists in local database and/or add them
-            conn = get_db_connection()
-            with conn.cursor() as cursor:
-                cursor.callproc('addUser', [request_params['username']])
-                conn.commit()  # Commit to save any changes
+            # Set up app database connection
+            dbConnection = pymysql.connect(
+                settings.DB_HOST,
+                settings.DB_USER,
+                settings.DB_PASSWD,
+                settings.DB_DATABASE,
+                charset='utf8mb4',
+                cursorclass=pymysql.cursors.DictCursor)
 
-                # Fetch the user_id of the authenticated user
-                cursor.execute(
-                    'SELECT username FROM users WHERE username = %s', (request_params['username'],))
-                username = cursor.fetchone()['username']
+            # Check if the user exists in database by calling stored procedure getUser
+            with dbConnection.cursor() as cursor:
+                cursor.callproc(
+                    'getUser', (request_params['username'],))
+                result = cursor.fetchone()
 
-            # Store username and user_id in the session
-            session['username'] = request_params['username']
+            # If the user does not exist in the database
+            if result is None:
+                # Call the stored procedure add the user
+                with dbConnection.cursor() as cursor:
+                    cursor.callproc(
+                        'addUser', (request_params['username']))
+                    dbConnection.commit()
+                # After the user is added, fetch the username
+                with dbConnection.cursor() as cursor:
+                    cursor.callproc('getUser',
+                                    (request_params['username'],))
+                    result = cursor.fetchone()
+                username = result['username']
+                response = {'status': 'Created', 'username': username}
+                responseCode = 201
+            else:
+                username = result['username']
+                response = {'status': 'OK', 'username': username}
+                responseCode = 200
 
-            return jsonify({'status': 'success', 'session_id': session.sid}), 201
-        except Exception as e:
-            return jsonify({'status': 'Error', 'message': str(e)}), 500
+            # Set username in session
+            session['username'] = username
+        except LDAPException as e:
+            if isinstance(e, LDAPOperationResult) and e.result == "invalidCredentials":
+                response, responseCode = {
+                    'status': 'Unauthorized', 'message': 'Invalid username or password'}, 401
+            else:
+                response, responseCode = {
+                    'status': 'Internal Server Error', 'message': 'An LDAP error occurred'}, 500
+        except MySQLError as e:
+            response, responseCode = {'status': 'Internal Server Error',
+                                      'message': 'Database not reachable or operation failed'}, 500
         finally:
-            if ldapConnection:
+            if 'ldapConnection' in locals() and ldapConnection.bound:
                 ldapConnection.unbind()
-
-    # GET: Check Cookie data with Session data
-    #
-    # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar http://cs3103.cs.unb.ca:8042/login
-    def get(self):
-        if 'username' in session:
-            username = session['username']
-            response = {'status': 'success'}
-            responseCode = 200
-        else:
-            response = {'status': 'fail'}
-            responseCode = 403
+            if dbConnection:
+                dbConnection.close()
 
         return make_response(jsonify(response), responseCode)
+
+# Logout
 
 
 class Logout(Resource):
