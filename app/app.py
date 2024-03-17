@@ -293,5 +293,8 @@ api.add_resource(DeleteLink, '/link/<int:link_id>')
 api.add_resource(GetDestination, '/links/shortcut/<string:shortcut>')
 
 if __name__ == "__main__":
-    app.run(host=settings.APP_HOST, port=settings.APP_PORT,
+    context = ('cert.pem', 'key.pem')
+    app.run(host=settings.APP_HOST,
+            port=settings.APP_PORT,
+            ssl_context=context,
             debug=settings.APP_DEBUG)
