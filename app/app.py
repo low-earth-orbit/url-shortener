@@ -192,7 +192,7 @@ class Logout(Resource):
         if 'username' in session:
             session.pop('username', None)
             response = {'status': 'success'}
-            responseCode = 204
+            responseCode = 200
         else:
             response = {'status': 'fail'}
             responseCode = 403
@@ -219,6 +219,8 @@ class UserLinks(Resource):
                     "destination": link['destination'],
                     "short_url": f"{request.host_url}{link['shortcut']}"
                 })
+        if not links:
+            return make_response(jsonify({"error": "User not found"}), 404)
 
         return jsonify(links)
 
@@ -267,7 +269,7 @@ class DeleteLink(Resource):
                 return make_response(jsonify({"error": "Link not found or access denied"}), 404)
             conn.commit()
 
-        return make_response(jsonify({"success": "Link deleted"}), 200)
+        return make_response(jsonify({"success": "Link deleted"}), 204)
 
 # Resource for getting link destination
 
@@ -281,7 +283,8 @@ class GetDestination(Resource):
             if result:
                 return redirect(result['destination'], code=302)
             else:
-                return jsonify({"error": "Shortcut not found"}), 404
+                return make_response(jsonify({"error": "Shortcut not found"}), 404)
+
 
 
 # Register resources
