@@ -159,7 +159,7 @@ class Login(Resource):
             else:
                 username = result['username']
                 response = {'status': 'OK', 'username': username}
-                responseCode = 200
+                responseCode = 201
 
             # Set username in session
             session['username'] = username
@@ -284,7 +284,6 @@ class GetDestination(Resource):
                 return redirect(result['destination'], code=302)
             else:
                 return make_response(jsonify({"error": "Shortcut not found"}), 404)
-
 
 
 # Register resources

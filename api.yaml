@@ -33,7 +33,7 @@ paths:
                 - password
       responses:
         "200":
-          description: Authentication successful. Session initiated or already in session.
+          description: User is already logged in.
           content:
             application/json:
               schema:
@@ -49,7 +49,7 @@ paths:
                   - status
                   - username
         "201":
-          description: User authenticated and added to the local database. Session initiated.
+          description: User authenticated. Session initiated.
           content:
             application/json:
               schema:
