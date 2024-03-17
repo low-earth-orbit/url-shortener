@@ -26,6 +26,14 @@ BEGIN
 END //
 DELIMITER ;
 
+-- getUser
+DELIMITER //
+CREATE PROCEDURE getUser(IN _username VARCHAR(255))
+BEGIN
+    SELECT username FROM users WHERE username = _username;
+END //
+DELIMITER ;
+
 -- createLink
 -- We can either generate unique shortcut here or in the app. Generating shortcut here can avoid additional communication between DB and app in the rare case of collision. Either option is open. When we work with API we'll have a better idea.
 DELIMITER //
