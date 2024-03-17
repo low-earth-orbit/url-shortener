@@ -20,36 +20,56 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginCredentials"
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The user's username.
+                password:
+                  type: string
+                  description: The user's password.
+              required:
+                - username
+                - password
       responses:
         "200":
-          description: Authentication successful. Session initiated.
+          description: Authentication successful. Session initiated or already in session.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  sessionId:
+                  status:
                     type: string
-                    description: A session identifier for the authenticated user.
+                    example: OK
                   username:
                     type: string
                     description: The username of the authenticated user.
                 required:
-                  - sessionId
+                  - status
                   - username
-          headers:
-            Set-Cookie:
-              description: Session cookie with HttpOnly; Secure attributes.
+        "201":
+          description: User authenticated and added to the local database. Session initiated.
+          content:
+            application/json:
               schema:
-                type: string
-                example: "sessionId=abc123; Path=/; HttpOnly; Secure"
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Created
+                  username:
+                    type: string
+                    description: The username of the authenticated user.
+                required:
+                  - status
+                  - username
         "401":
           description: Authentication failed. Invalid username or password.
         "500":
-          description: Internal server error, e.g., LDAP server is not reachable.
+          description: Internal server error, e.g., LDAP server is not reachable or database operation failed.
   /users/logout:
-    post:
+    delete:
       summary: Logs out the current user and invalidates the session
       tags:
         - Users
@@ -63,17 +83,31 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
+                  status:
                     type: string
-                    example: "You have been logged out successfully."
+                    example: "success"
+                    description: Indicates that the logout was successful.
+                required:
+                  - status
           headers:
             Set-Cookie:
               description: Clears the session cookie.
               schema:
                 type: string
                 example: "sessionId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure"
-        "401":
-          description: Unauthorized. No active session found.
+        "403":
+          description: Logout failed. No active session found to invalidate.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "fail"
+                    description: Indicates that no user session was found to log out.
+                required:
+                  - status
   /users/links:
     get:
       summary: Retrieves all links created by a specific user
@@ -165,16 +199,6 @@ components:
       in: cookie
       name: sessionId
   schemas:
-    LoginCredentials:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-      required:
-        - username
-        - password
     NewLinkRequest:
       type: object
       properties:
