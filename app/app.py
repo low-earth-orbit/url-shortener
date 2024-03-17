@@ -242,20 +242,28 @@ class CreateShortcut(Resource):
         data = request.get_json()
         destination = data.get('destination')
         if not destination or not is_valid_url(destination):
-            return make_response(jsonify({"error": "Invalid URL,Try again"}), 400)
+            return make_response(jsonify({"error": "Invalid URL. Please try again with a valid URL."}), 400)
 
         username = session.get('username')
 
         conn = get_db_connection()
-        with conn.cursor() as cursor:
-            cursor.callproc('createLink', [destination, username])
-            result = cursor.fetchone()
-            conn.commit()
+        try:
+            with conn.cursor() as cursor:
+                cursor.callproc('createLink', [destination, username])
+                result = cursor.fetchone()
+                conn.commit()
 
-        if result:
-            return make_response(jsonify({"short_url": f"{request.host_url}{result['generated_shortcut']}"}), 201)
-        else:
-            return make_response(jsonify({"error": "Failed to create link"}), 500)
+            if result:
+                return make_response(jsonify({"short_url": f"{request.host_url}{result['generated_shortcut']}"}), 201)
+            else:
+                # If the stored procedure does not return a result, we assume link creation failed
+                return make_response(jsonify({"error": "Failed to create link. Please try again later."}), 500)
+        except pymysql.MySQLError as e:
+            # Log the error or handle specific MySQL errors if needed
+            return make_response(jsonify({"error": "Failed to create link due to a database error."}), 500)
+        finally:
+            conn.close()
+
 
 
 # Resource for deleting a link
