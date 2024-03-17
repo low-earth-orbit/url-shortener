@@ -32,12 +32,12 @@ paths:
                   sessionId:
                     type: string
                     description: A session identifier for the authenticated user.
-                  userId:
-                    type: integer
-                    description: The userId of the authenticated user in the local database.
+                  username:
+                    type: string
+                    description: The username of the authenticated user.
                 required:
                   - sessionId
-                  - userId
+                  - username
           headers:
             Set-Cookie:
               description: Session cookie with HttpOnly; Secure attributes.
@@ -192,10 +192,10 @@ components:
           type: string
         shortcut:
           type: string
-        userId:
-          type: integer
+        username:
+          type: string
       required:
         - linkId
         - destination
         - shortcut
-        - userId
+        - username
