@@ -1,7 +1,6 @@
 -- users table
 CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(320) UNIQUE NOT NULL
+    username VARCHAR(255) PRIMARY KEY
 );
 
 -- links table
@@ -9,14 +8,14 @@ CREATE TABLE links (
     link_id INT AUTO_INCREMENT PRIMARY KEY,
     destination VARCHAR(2048) NOT NULL,
     shortcut VARCHAR(6) UNIQUE NOT NULL, -- shortcut must be unique
-    user_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE -- if the associated user is deleted, the link will also be deleted
+    username VARCHAR(255) NOT NULL,
+    FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE -- if the associated user is deleted, the link will also be deleted
 );
 
 -- addUser
 DELIMITER //
 DROP PROCEDURE IF EXISTS addUser;
-CREATE PROCEDURE addUser(IN _username VARCHAR(320))
+CREATE PROCEDURE addUser(IN _username VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -31,7 +30,7 @@ DELIMITER ;
 -- We can either generate unique shortcut here or in the app. Generating shortcut here can avoid additional communication between DB and app in the rare case of collision. Either option is open. When we work with API we'll have a better idea.
 DELIMITER //
 DROP PROCEDURE IF EXISTS createLink;
-CREATE PROCEDURE createLink(IN _destination VARCHAR(2048), IN _user_id INT)
+CREATE PROCEDURE createLink(IN _destination VARCHAR(2048), IN _username VARCHAR(255))
 BEGIN
     DECLARE _shortcut VARCHAR(6);
     DECLARE collision_flag INT DEFAULT 1;
@@ -50,7 +49,7 @@ BEGIN
     END WHILE; -- This while loop in extremely rare cases could be infinite; once we decided how/where to generate shortcut, we can write more defensively.
 
     -- Insert the new link with the unique shortcut
-    INSERT INTO links(destination, shortcut, user_id) VALUES (_destination, _shortcut, _user_id);
+    INSERT INTO links(destination, shortcut, username) VALUES (_destination, _shortcut, _username);
     SELECT _shortcut AS generated_shortcut; -- returns generated shortcut
 END //
 DELIMITER ;
@@ -72,14 +71,14 @@ DELIMITER ;
 -- getUserLinks
 DELIMITER //
 DROP PROCEDURE IF EXISTS getUserLinks;
-CREATE PROCEDURE getUserLinks(IN _user_id INT)
+CREATE PROCEDURE getUserLinks(IN _username VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         SELECT 'Error occurred in getUserLinks';
     END;
 
-    SELECT * FROM links WHERE user_id = _user_id;
+    SELECT * FROM links WHERE username = _username;
 END //
 DELIMITER ;
 
