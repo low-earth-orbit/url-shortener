@@ -96,14 +96,14 @@ class Login(Resource):
         parser = reqparse.RequestParser()
         try:
             # Required attributes in the JSON document
-            parser.add_argument('user_id', type=str, required=True)
+            parser.add_argument('username', type=str, required=True)
             parser.add_argument('password', type=str, required=True)
             request_params = parser.parse_args()
         except:
             abort(400)  # bad request
 
         # If the user is already logged in
-        if 'user_id' in session:
+        if 'username' in session:
             return jsonify({'status': 'Already logged in'})
 
         try:
@@ -124,12 +124,11 @@ class Login(Resource):
 
                 # Fetch the user_id of the authenticated user
                 cursor.execute(
-                    'SELECT user_id FROM users WHERE username = %s', (request_params['username'],))
-                user_id = cursor.fetchone()['user_id']
+                    'SELECT username FROM users WHERE username = %s', (request_params['username'],))
+                username = cursor.fetchone()['username']
 
             # Store username and user_id in the session
             session['username'] = request_params['username']
-            session['user_id'] = user_id
 
             return jsonify({'status': 'success', 'session_id': session.sid}), 201
         except Exception as e:
@@ -143,8 +142,8 @@ class Login(Resource):
     # Example curl command:
     # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar http://cs3103.cs.unb.ca:8042/login
     def get(self):
-        if 'user_id' in session:
-            user_id = session['user_id']
+        if 'username' in session:
+            username = session['username']
             response = {'status': 'success'}
             responseCode = 200
         else:
@@ -159,8 +158,8 @@ class Logout(Resource):
     # Example
     # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar http://cs3103.cs.unb.ca:8042/logout
     def delete(self):
-        if 'user_id' in session:
-            session.pop('user_id', None)
+        if 'username' in session:
+            session.pop('username', None)
             response = {'status': 'success'}
             responseCode = 200
         else:
@@ -175,7 +174,7 @@ class Logout(Resource):
 
 class UserLinks(Resource):
     def get(self):
-        if 'user_id' not in session:
+        if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
         user_id = session.get('user_id')
@@ -224,10 +223,10 @@ class CreateShortcut(Resource):
 
 class DeleteLink(Resource):
     def delete(self, link_id):
-        if 'user_id' not in session:
+        if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
-        user_id = session.get('user_id')
+        username = session.get('username')
 
         conn = get_db_connection()
         with conn.cursor() as cursor:
