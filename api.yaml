@@ -76,7 +76,7 @@ paths:
       security:
         - sessionAuth: []
       responses:
-        "200":
+        "204":
           description: Logout successful. Session invalidated.
           content:
             application/json:

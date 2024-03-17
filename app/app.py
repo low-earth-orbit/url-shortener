@@ -192,7 +192,7 @@ class Logout(Resource):
         if 'username' in session:
             session.pop('username', None)
             response = {'status': 'success'}
-            responseCode = 200
+            responseCode = 204
         else:
             response = {'status': 'fail'}
             responseCode = 403
