@@ -116,8 +116,7 @@ class Login(Resource):
             # LDAP server call for authentication
             ldapServer = Server(host=settings.LDAP_HOST, use_ssl=True)
             ldapConnection = Connection(ldapServer,
-                                        user=f'uid={
-                                            request_params["username"]},ou=People,ou=fcs,o=unb',
+                                        user=f'uid={request_params["username"]},ou=People,ou=fcs,o=unb',
                                         password=request_params['password'])
             if not ldapConnection.bind():
                 return jsonify({'status': 'LDAP authentication failed'}), 401
