@@ -177,12 +177,12 @@ class UserLinks(Resource):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
-        user_id = session.get('user_id')
+        username = session.get('username')
 
         conn = get_db_connection()
         links = []
         with conn.cursor() as cursor:
-            cursor.callproc('getUserLinks', [user_id])
+            cursor.callproc('getUserLinks', [username])
             for link in cursor.fetchall():
                 links.append({
                     "destination": link['destination'],
@@ -196,7 +196,7 @@ class UserLinks(Resource):
 
 class CreateShortcut(Resource):
     def post(self):
-        if 'user_id' not in session:
+        if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
         data = request.get_json()
@@ -204,11 +204,11 @@ class CreateShortcut(Resource):
         if not destination:
             return make_response(jsonify({"error": "Missing destination URL"}), 400)
 
-        user_id = session.get('user_id')
+        username = session.get('username')
 
         conn = get_db_connection()
         with conn.cursor() as cursor:
-            cursor.callproc('createLink', [destination, user_id])
+            cursor.callproc('createLink', [destination, username])
             result = cursor.fetchone()
             conn.commit()
 
@@ -231,7 +231,7 @@ class DeleteLink(Resource):
         conn = get_db_connection()
         with conn.cursor() as cursor:
             cursor.execute(
-                'DELETE FROM links WHERE link_id = %s AND user_id = %s', (link_id, user_id))
+                'DELETE FROM links WHERE link_id = %s AND username = %s', (link_id, username))
             if cursor.rowcount == 0:
                 return make_response(jsonify({"error": "Link not found or access denied"}), 404)
             conn.commit()
