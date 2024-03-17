@@ -16,6 +16,8 @@ import cgitb
 import cgi
 import sys
 import datetime
+import validators
+
 # import mutagen
 cgitb.enable()
 
@@ -27,6 +29,10 @@ def get_db_connection():
                            db=settings.DB_NAME,
                            cursorclass=pymysql.cursors.DictCursor)
     return conn
+
+
+def is_valid_url(url):
+    return validators.url(url)
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -118,9 +124,9 @@ class Login(Resource):
 
             # Check if user exists in local database and/or add them
             conn = get_db_connection()
-            with conn.cursor() as cursor:
+            with cursor() as cursor:
                 cursor.callproc('addUser', [request_params['username']])
-                conn.commit()  # Commit to save any changes
+                commit()  # Commit to save any changes
 
                 # Fetch the user_id of the authenticated user
                 cursor.execute(
@@ -201,8 +207,8 @@ class CreateShortcut(Resource):
 
         data = request.get_json()
         destination = data.get('destination')
-        if not destination:
-            return make_response(jsonify({"error": "Missing destination URL"}), 400)
+        if not destination or not is_valid_url(destination):
+            return make_response(jsonify({"error": "Invalid URL,Try again"}), 400)
 
         username = session.get('username')
 
@@ -229,12 +235,12 @@ class DeleteLink(Resource):
         username = session.get('username')
 
         conn = get_db_connection()
-        with conn.cursor() as cursor:
+        with cursor() as cursor:
             cursor.execute(
                 'DELETE FROM links WHERE link_id = %s AND username = %s', (link_id, username))
             if cursor.rowcount == 0:
                 return make_response(jsonify({"error": "Link not found or access denied"}), 404)
-            conn.commit()
+            commit()
 
         return make_response(jsonify({"success": "Link deleted"}), 200)
 
@@ -244,7 +250,7 @@ class DeleteLink(Resource):
 class GetDestination(Resource):
     def get(self, shortcut):
         conn = get_db_connection()
-        with conn.cursor() as cursor:
+        with cursor() as cursor:
             cursor.callproc('getLinkDestination', [shortcut])
             result = cursor.fetchone()
             if result:
