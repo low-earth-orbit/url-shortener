@@ -214,15 +214,22 @@ class UserLinks(Resource):
         links = []
         with conn.cursor() as cursor:
             cursor.callproc('getUserLinks', [username])
-            for link in cursor.fetchall():
-                links.append({
-                    "destination": link['destination'],
-                    "short_url": f"{request.host_url}{link['shortcut']}"
-                })
-        if not links:
-            return make_response(jsonify({"error": "User not found"}), 404)
+            links = cursor.fetchall()
 
-        return jsonify(links)
+        if not links:
+            return make_response(jsonify({"error": "No links found for the user"}), 404)
+
+        # Format the links for the response
+        formatted_links = [
+            {
+                "destination": link['destination'],
+                "short_url": f"{request.host_url}{link['shortcut']}"
+            }
+            for link in links
+        ]
+
+        return jsonify(formatted_links)
+
 
 # Resource for link shortening
 
