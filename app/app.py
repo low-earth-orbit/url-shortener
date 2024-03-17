@@ -123,9 +123,9 @@ class Login(Resource):
 
             # Check if user exists in local database and/or add them
             conn = get_db_connection()
-            with cursor() as cursor:
+            with conn.cursor() as cursor:
                 cursor.callproc('addUser', [request_params['username']])
-                commit()  # Commit to save any changes
+                conn.commit()  # Commit to save any changes
 
                 # Fetch the user_id of the authenticated user
                 cursor.execute(
@@ -234,12 +234,12 @@ class DeleteLink(Resource):
         username = session.get('username')
 
         conn = get_db_connection()
-        with cursor() as cursor:
+        with conn.cursor() as cursor:
             cursor.execute(
                 'DELETE FROM links WHERE link_id = %s AND username = %s', (link_id, username))
             if cursor.rowcount == 0:
                 return make_response(jsonify({"error": "Link not found or access denied"}), 404)
-            commit()
+            conn.commit()
 
         return make_response(jsonify({"success": "Link deleted"}), 200)
 
@@ -249,7 +249,7 @@ class DeleteLink(Resource):
 class GetDestination(Resource):
     def get(self, shortcut):
         conn = get_db_connection()
-        with cursor() as cursor:
+        with conn.cursor() as cursor:
             cursor.callproc('getLinkDestination', [shortcut])
             result = cursor.fetchone()
             if result:
