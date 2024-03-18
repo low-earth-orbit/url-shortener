@@ -213,24 +213,28 @@ class UserLinks(Resource):
         username = session.get('username')
 
         conn = get_db_connection()
-        links = []
-        with conn.cursor() as cursor:
-            cursor.callproc('getUserLinks', [username])
-            links = cursor.fetchall()
+        try:
+            links = []
+            with conn.cursor() as cursor:
+                cursor.callproc('getUserLinks', [username])
+                links = cursor.fetchall()
+            conn.close()  # Close the connection immediately after the operation
 
-        if not links:
-            return make_response(jsonify({"error": "No links found for the user"}), 404)
+            if not links:
+                return make_response(jsonify({"error": "No links found for the user"}), 404)
 
-        # Format the links for the response
-        formatted_links = [
-            {
-                "destination": link['destination'],
-                "short_url": f"{request.host_url}{link['shortcut']}"
-            }
-            for link in links
-        ]
+            # Format the links for the response
+            formatted_links = [
+                {
+                    "destination": link['destination'],
+                    "short_url": f"{request.host_url}{link['shortcut']}"
+                }
+                for link in links
+            ]
 
-        return jsonify(formatted_links)
+            return jsonify(formatted_links)
+        except pymysql.MySQLError as e:
+            return make_response(jsonify({"error": "Database error occurred"}), 500)
 
 
 # Resource for link shortening
