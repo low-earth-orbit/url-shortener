@@ -282,9 +282,11 @@ class DeleteLink(Resource):
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
         username = session.get('username')
-        # Establish database connection at the start
-        conn = get_db_connection()
+
         try:
+            # Establish database connection at the start within the try block
+            conn = get_db_connection()
+
             with conn.cursor() as cursor:
                 # Check if the link exists and belongs to the user
                 cursor.execute(
@@ -302,7 +304,10 @@ class DeleteLink(Resource):
         except pymysql.MySQLError as e:
             return make_response(jsonify({"error": "Failed to delete link due to a database error."}), 500)
         finally:
-            conn.close()
+            # Ensure the connection is closed in the finally block
+            if 'conn' in locals():
+                conn.close()
+
 
 
 
