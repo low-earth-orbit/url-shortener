@@ -222,24 +222,22 @@ class UserLinks(Resource):
                 links = cursor.fetchall()
 
             if not links:
-                return make_response(jsonify({"error": "No links found for the user"}), 404)
+                return make_response(jsonify({'status': 'OK'}), 200)
 
             # Format the links for the response
             formatted_links = [
-                {
-                    "destination": link['destination'],
-                    "short_url": f"{request.host_url}{link['shortcut']}"
-                }
+                link['shortcut']
                 for link in links
             ]
 
-            return jsonify(formatted_links)
+            return jsonify(formatted_links), 200
         except pymysql.MySQLError as e:
             return make_response(jsonify({"error": "Database error occurred"}), 500)
         finally:
             # Ensure the connection is closed in the finally block
             if 'conn' in locals():
                 conn.close()
+
 
 
 
