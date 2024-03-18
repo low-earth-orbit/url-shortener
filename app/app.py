@@ -257,9 +257,11 @@ class CreateShortcut(Resource):
             return make_response(jsonify({"error": "Invalid URL. Please try again with a valid URL."}), 400)
 
         username = session.get('username')
-        # Establish database connection at the start
-        conn = get_db_connection()
+
         try:
+            # Establish database connection at the start within the try block
+            conn = get_db_connection()
+
             with conn.cursor() as cursor:
                 cursor.callproc('createLink', [destination, username])
                 result = cursor.fetchone()
@@ -274,7 +276,10 @@ class CreateShortcut(Resource):
             # Log the error or handle specific MySQL errors if needed
             return make_response(jsonify({"error": "Failed to create link due to a database error."}), 500)
         finally:
-            conn.close()
+            # Ensure the connection is closed in the finally block
+            if 'conn' in locals():
+                conn.close()
+
 
 
 
