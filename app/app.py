@@ -211,7 +211,8 @@ class UserLinks(Resource):
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
         username = session.get('username')
-
+        
+        # Establish database connection at the start
         conn = get_db_connection()
         try:
             links = []
@@ -251,7 +252,7 @@ class CreateShortcut(Resource):
             return make_response(jsonify({"error": "Invalid URL. Please try again with a valid URL."}), 400)
 
         username = session.get('username')
-
+        # Establish database connection at the start
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
@@ -281,7 +282,7 @@ class DeleteLink(Resource):
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
         username = session.get('username')
-
+        # Establish database connection at the start
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
@@ -303,6 +304,7 @@ class DeleteLink(Resource):
 
 class GetDestination(Resource):
     def get(self, shortcut):
+        # Establish database connection at the start
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
