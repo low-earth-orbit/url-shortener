@@ -286,17 +286,24 @@ class DeleteLink(Resource):
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
+                # Check if the link exists and belongs to the user
+                cursor.execute(
+                    'SELECT * FROM links WHERE link_id = %s AND username = %s', (link_id, username))
+                link = cursor.fetchone()
+
+                if not link:
+                    return make_response(jsonify({"error": "Link not found or access denied"}), 404)
+
+                # Delete the link using the stored procedure
                 cursor.callproc('deleteLink', [link_id])
                 conn.commit()
-                # Check if the link was deleted
-                if cursor.rowcount == 0:
-                    return make_response(jsonify({"error": "Link not found"}), 404)
 
             return ('', 204)
         except pymysql.MySQLError as e:
             return make_response(jsonify({"error": "Failed to delete link due to a database error."}), 500)
         finally:
             conn.close()
+
 
 
 # Resource for getting link destination
