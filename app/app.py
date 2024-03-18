@@ -289,7 +289,6 @@ class DeleteLink(Resource):
         username = session.get('username')
 
         try:
-            # Establish database connection at the start within the try block
             conn = get_db_connection()
 
             with conn.cursor() as cursor:
@@ -299,19 +298,19 @@ class DeleteLink(Resource):
                 link = cursor.fetchone()
 
                 if not link:
-                    return make_response(jsonify({"error": "Link not found or access denied"}), 404)
+                    return make_response(jsonify({"error": "Link not found for the user"}), 404)
 
                 # Delete the link using the stored procedure
                 cursor.callproc('deleteLink', [link_id])
                 conn.commit()
 
-            return ('', 204)
+            return make_response(jsonify({"message": "Link deleted successfully"}), 204)
         except pymysql.MySQLError as e:
             return make_response(jsonify({"error": "Failed to delete link due to a database error."}), 500)
         finally:
-            # Ensure the connection is closed in the finally block
             if 'conn' in locals():
                 conn.close()
+
 
 
 
