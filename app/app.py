@@ -211,15 +211,15 @@ class UserLinks(Resource):
             return make_response(jsonify({"error": "Authentication required"}), 403)
 
         username = session.get('username')
-        
-        # Establish database connection at the start
-        conn = get_db_connection()
+
         try:
+            # Establish database connection at the start within the try block
+            conn = get_db_connection()
+
             links = []
             with conn.cursor() as cursor:
                 cursor.callproc('getUserLinks', [username])
                 links = cursor.fetchall()
-            conn.close()  # Close the connection immediately after the operation
 
             if not links:
                 return make_response(jsonify({"error": "No links found for the user"}), 404)
@@ -236,6 +236,11 @@ class UserLinks(Resource):
             return jsonify(formatted_links)
         except pymysql.MySQLError as e:
             return make_response(jsonify({"error": "Database error occurred"}), 500)
+        finally:
+            # Ensure the connection is closed in the finally block
+            if 'conn' in locals():
+                conn.close()
+
 
 
 # Resource for link shortening
