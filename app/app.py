@@ -257,7 +257,6 @@ class CreateShortcut(Resource):
         username = session.get('username')
 
         try:
-            # Establish database connection at the start within the try block
             conn = get_db_connection()
 
             with conn.cursor() as cursor:
@@ -266,17 +265,15 @@ class CreateShortcut(Resource):
                 conn.commit()
 
             if result:
-                return make_response(jsonify({"short_url": f"{request.host_url}{result['generated_shortcut']}"}), 201)
+                return make_response(jsonify({"shortcut": result['generated_shortcut']}), 201)
             else:
-                # If the stored procedure does not return a result, we assume link creation failed
                 return make_response(jsonify({"error": "Failed to create link. Please try again later."}), 500)
         except pymysql.MySQLError as e:
-            # Log the error or handle specific MySQL errors if needed
             return make_response(jsonify({"error": "Failed to create link due to a database error."}), 500)
         finally:
-            # Ensure the connection is closed in the finally block
             if 'conn' in locals():
                 conn.close()
+
 
 
 
