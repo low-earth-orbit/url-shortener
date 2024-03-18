@@ -301,13 +301,16 @@ class DeleteLink(Resource):
 class GetDestination(Resource):
     def get(self, shortcut):
         conn = get_db_connection()
-        with conn.cursor() as cursor:
-            cursor.callproc('getLinkDestination', [shortcut])
-            result = cursor.fetchone()
-            if result:
-                return redirect(result['destination'], code=302)
-            else:
-                return make_response(jsonify({"error": "Shortcut not found"}), 404)
+        try:
+            with conn.cursor() as cursor:
+                cursor.callproc('getLinkDestination', [shortcut])
+                result = cursor.fetchone()
+                if result:
+                    return redirect(result['destination'], code=302)  
+                else:
+                    return make_response(jsonify({"error": "Shortcut not found"}), 404)
+        finally:
+            conn.close()
 
 
 # Register resources
