@@ -326,18 +326,25 @@ class DeleteLink(Resource):
 
 class GetDestination(Resource):
     def get(self, shortcut):
-        # Establish database connection at the start
-        conn = get_db_connection()
         try:
+            # Establish database connection at the start within the try block
+            conn = get_db_connection()
+
             with conn.cursor() as cursor:
                 cursor.callproc('getLinkDestination', [shortcut])
                 result = cursor.fetchone()
-                if result:
-                    return redirect(result['destination'], code=302)  
-                else:
-                    return make_response(jsonify({"error": "Shortcut not found"}), 404)
+
+            if result:
+                return redirect(result['destination'], code=302)  
+            else:
+                return make_response(jsonify({"error": "Shortcut not found"}), 404)
+        except pymysql.MySQLError as e:
+            return make_response(jsonify({"error": "Database error occurred"}), 500)
         finally:
-            conn.close()
+            # Ensure the connection is closed in the finally block
+            if 'conn' in locals():
+                conn.close()
+
 
 
 # Register resources
