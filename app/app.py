@@ -25,11 +25,13 @@ cgitb.enable()
 
 
 def get_db_connection():
-    conn = pymysql.connect(host=settings.DB_HOST,
-                           user=settings.DB_USER,
-                           password=settings.DB_PASS,
-                           db=settings.DB_NAME,
-                           cursorclass=pymysql.cursors.DictCursor)
+    conn = pymysql.connect(
+                settings.DB_HOST,
+                settings.DB_USER,
+                settings.DB_PASSWD,
+                settings.DB_DATABASE,
+                charset='utf8mb4',
+                cursorclass=pymysql.cursors.DictCursor)
     return conn
 
 
