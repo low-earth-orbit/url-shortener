@@ -256,8 +256,16 @@ class CreateShortcut(Resource):
                 result = cursor.fetchone()
                 conn.commit()
 
+            # Format the link for the response
+            link = {
+                "linkId": result['link_id'],
+                "destination": result['destination'],
+                "shortcut": result['shortcut'],
+                "username": result['username']
+            }
+
             if result:
-                return make_response(jsonify({"shortcut": result['generated_shortcut']}), 201)
+                return make_response(jsonify(link), 201)
             else:
                 return make_response(jsonify({"error": "Failed to create link. Please try again later."}), 500)
         except pymysql.MySQLError as e:

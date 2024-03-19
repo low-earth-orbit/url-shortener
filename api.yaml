@@ -47,7 +47,6 @@ paths:
                     description: The username of the authenticated user.
                 required:
                   - status
-                  - username
         "201":
           description: User authenticated. Session initiated.
           content:
