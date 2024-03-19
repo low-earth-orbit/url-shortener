@@ -30,7 +30,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE getUser(IN _username VARCHAR(255))
 BEGIN
-    SELECT username FROM users WHERE username = _username;
+    SELECT * FROM users WHERE username = _username;
 END //
 DELIMITER ;
 
@@ -58,7 +58,7 @@ BEGIN
 
     -- Insert the new link with the unique shortcut
     INSERT INTO links(destination, shortcut, username) VALUES (_destination, _shortcut, _username);
-    SELECT _shortcut AS generated_shortcut; -- returns generated shortcut
+    SELECT * FROM links WHERE shortcut = _shortcut; -- returns the created link
 END //
 DELIMITER ;
 

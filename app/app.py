@@ -297,7 +297,7 @@ class DeleteLink(Resource):
                     return make_response(jsonify({"error": "Link not found for the user"}), 404)
 
                 # Delete the link using the stored procedure
-                cursor.callproc('deleteLink', [link_id])
+                cursor.callproc('deleteLink', link['link_id'])
                 conn.commit()
 
             return make_response('', 204)
