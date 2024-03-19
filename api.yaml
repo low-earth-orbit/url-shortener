@@ -5,12 +5,12 @@ info:
   version: "1.0.0"
   contact:
     name: "API Support"
-    url: "https://cs3103.cs.unb.ca/hhong/project/support"
+    url: "https://cs3103.cs.unb.ca/hhong"
     email: "leo.hong@unb.ca"
 servers:
-  - url: "https://cs3103.cs.unb.ca/hhong/project/api"
+  - url: "https://cs3103.cs.unb.ca:8042"
 paths:
-  /users/login:
+  /login:
     post:
       summary: Authenticates a user via LDAP, checks the local database and initiates a session
       tags:
@@ -67,7 +67,7 @@ paths:
           description: Authentication failed. Invalid username or password.
         "500":
           description: Internal server error, e.g., LDAP server is not reachable or database operation failed.
-  /users/logout:
+  /logout:
     delete:
       summary: Logs out the current user and invalidates the session
       tags:
