@@ -126,6 +126,8 @@ paths:
                   $ref: "#/components/schemas/Link"
         "500":
           description: Database error
+        "403":
+          description: Authentication required
   /links:
     post:
       summary: Creates a new short link
@@ -148,6 +150,10 @@ paths:
                 $ref: "#/components/schemas/Link"
         "400":
           description: Invalid input
+        "403":
+          description: Authentication required
+        "500":
+          description: Database or server error
   /links/{linkId}:
     delete:
       summary: Deletes a specific link
@@ -167,7 +173,9 @@ paths:
         "404":
           description: Link not found
         "403":
-          description: User not authorized to delete this link
+          description: Authentication required
+        "500":
+          description: Database error
   /links/shortcut/{shortcut}:
     get:
       summary: Retrieves the destination URL
@@ -190,6 +198,8 @@ paths:
                 description: URL to redirect to
         "404":
           description: Shortcut not found
+        "500":
+          description: Database error
 components:
   securitySchemes:
     sessionAuth:
