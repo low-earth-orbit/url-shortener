@@ -95,8 +95,8 @@ paths:
               schema:
                 type: string
                 example: "sessionId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure"
-        "403":
-          description: Logout failed. No active session found to invalidate.
+        "404":
+          description: No active session found to invalidate.
           content:
             application/json:
               schema:
@@ -126,7 +126,7 @@ paths:
                   $ref: "#/components/schemas/Link"
         "500":
           description: Database error
-        "403":
+        "401":
           description: Authentication required
   /links:
     post:
@@ -150,7 +150,7 @@ paths:
                 $ref: "#/components/schemas/Link"
         "400":
           description: Invalid input
-        "403":
+        "401":
           description: Authentication required
         "500":
           description: Database or server error
@@ -172,7 +172,7 @@ paths:
           description: Link deleted successfully
         "404":
           description: Link not found
-        "403":
+        "401":
           description: Authentication required
         "500":
           description: Database error

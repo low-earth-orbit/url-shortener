@@ -191,7 +191,7 @@ class Logout(Resource):
             responseCode = 204
         else:
             response = {'status': 'Fail'}
-            responseCode = 403
+            responseCode = 404
 
         return make_response(jsonify(response), responseCode)
 
@@ -202,7 +202,7 @@ class Logout(Resource):
 class UserLinks(Resource):
     def get(self):
         if 'username' not in session:
-            return make_response(jsonify({"error": "Authentication required"}), 403)
+            return make_response(jsonify({"error": "Authentication required"}), 401)
 
         username = session.get('username')
 
@@ -241,7 +241,7 @@ class UserLinks(Resource):
 class CreateShortcut(Resource):
     def post(self):
         if 'username' not in session:
-            return make_response(jsonify({"error": "Authentication required"}), 403)
+            return make_response(jsonify({"error": "Authentication required"}), 401)
 
         data = request.get_json()
         destination = data.get('destination')
@@ -275,7 +275,7 @@ class CreateShortcut(Resource):
 class DeleteLink(Resource):
     def delete(self, link_id):
         if 'username' not in session:
-            return make_response(jsonify({"error": "Authentication required"}), 403)
+            return make_response(jsonify({"error": "Authentication required"}), 401)
 
         username = session.get('username')
 
