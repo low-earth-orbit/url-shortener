@@ -3,10 +3,11 @@
 # exec(open(activate_this).read(), {'__file__': activate_this})
 
 import settings  # Our server and db settings, stored in settings.py
-from flask import Flask, jsonify, abort, request, make_response, session
+from flask import Flask, jsonify, abort, request, make_response, session, redirect
 from flask_restful import reqparse, Resource, Api
 from flask_session import Session
 import pymysql.cursors
+from pymysql import MySQLError
 import json
 import os
 import ssl
@@ -225,7 +226,7 @@ class UserLinks(Resource):
             ]
 
             return make_response(jsonify(formatted_links), 200)
-        except pymysql.MySQLError as e:
+        except MySQLError as e:
             return make_response(jsonify({"error": "Database error occurred"}), 500)
         finally:
             # Ensure the connection is closed in the finally block
@@ -268,7 +269,7 @@ class CreateShortcut(Resource):
                 return make_response(jsonify(link), 201)
             else:
                 return make_response(jsonify({"error": "Failed to create link. Please try again later."}), 500)
-        except pymysql.MySQLError as e:
+        except MySQLError as e:
             return make_response(jsonify({"error": "Failed to create link due to a database error."}), 500)
         finally:
             if 'conn' in locals():
@@ -301,7 +302,7 @@ class DeleteLink(Resource):
                 conn.commit()
 
             return make_response('', 204)
-        except pymysql.MySQLError as e:
+        except MySQLError as e:
             return make_response(jsonify({"error": "Failed to delete link due to a database error."}), 500)
         finally:
             if 'conn' in locals():
@@ -325,7 +326,7 @@ class GetDestination(Resource):
                 return redirect(result['destination'], code=302)
             else:
                 return make_response(jsonify({"error": "Shortcut not found"}), 404)
-        except pymysql.MySQLError as e:
+        except MySQLError as e:
             return make_response(jsonify({"error": "Database error occurred"}), 500)
         finally:
             # Ensure the connection is closed in the finally block
