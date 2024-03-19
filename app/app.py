@@ -215,16 +215,16 @@ class UserLinks(Resource):
                 cursor.callproc('getUserLinks', [username])
                 links = cursor.fetchall()
 
-            if not links:
-                return make_response(jsonify({'status': 'OK'}), 200)
-
             # Format the links for the response
             formatted_links = [
-                link['shortcut']
+                {
+                    "destination": link['destination'],
+                    "shortcut": link['shortcut']
+                }
                 for link in links
             ]
 
-            return jsonify(formatted_links), 200
+            return make_response(jsonify(formatted_links), 200)
         except pymysql.MySQLError as e:
             return make_response(jsonify({"error": "Database error occurred"}), 500)
         finally:

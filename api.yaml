@@ -124,10 +124,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Link"
-        "404":
-          description: User not found
-        "403":
-          description: User not authorized to retrieve links
+        "500":
+          description: Database error
   /links:
     post:
       summary: Creates a new short link
