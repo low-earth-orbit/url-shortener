@@ -17,11 +17,6 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS addUser;
 CREATE PROCEDURE addUser(IN _username VARCHAR(255))
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SELECT 'Error occurred in addUser';
-    END;
-
     INSERT INTO users(username) VALUES (_username);
 END //
 DELIMITER ;

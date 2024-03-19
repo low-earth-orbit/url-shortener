@@ -27,10 +27,10 @@ cgitb.enable()
 
 def get_db_connection():
     conn = pymysql.connect(
-        settings.DB_HOST,
-        settings.DB_USER,
-        settings.DB_PASSWD,
-        settings.DB_DATABASE,
+        host=settings.DB_HOST,
+        user=settings.DB_USER,
+        password=settings.DB_PASSWD,
+        database=settings.DB_DATABASE,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor)
     return conn
@@ -96,7 +96,7 @@ class Login(Resource):
     # Set Session and return Cookie
     #
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X POST -d '{"username": "hhong", "password": "your unb password"}' -c cookie-jar -k http://cs3103.cs.unb.ca:8042/login
+    # curl -i -H "Content-Type: application/json" -X POST -d '{"username": "your unb username", "password": "your unb password"}' -c cookie-jar -k https://cs3103.cs.unb.ca:8042/login
     #
     def post(self):
         if not request.json:
@@ -113,9 +113,10 @@ class Login(Resource):
             abort(400)  # bad request
 
         # If the user is already logged in
-        if 'username' in session and session['username'] == request_params['username']:
+        if request_params['username'] in session:
             return make_response(jsonify({'status': 'OK'}), 200)
 
+        dbConnection = None
         try:
             # Set up LDAP server connection
             ldapServer = Server(host=settings.LDAP_HOST)
@@ -134,16 +135,14 @@ class Login(Resource):
 
             # Check if the user exists in database by calling stored procedure getUser
             with dbConnection.cursor() as cursor:
-                cursor.callproc(
-                    'getUser', (request_params['username'],))
+                cursor.callproc('getUser', (request_params['username'],))
                 result = cursor.fetchone()
 
             # If the user does not exist in the database
             if result is None:
                 # Call the stored procedure add the user
                 with dbConnection.cursor() as cursor:
-                    cursor.callproc(
-                        'addUser', (request_params['username']))
+                    cursor.callproc('addUser', (request_params['username'],))
                     dbConnection.commit()
                 # After the user is added, fetch the username
                 with dbConnection.cursor() as cursor:
@@ -169,7 +168,7 @@ class Login(Resource):
                     'status': 'Internal Server Error', 'message': 'An LDAP error occurred'}, 500
         except MySQLError as e:
             response, responseCode = {'status': 'Internal Server Error',
-                                      'message': 'Database not reachable or operation failed'}, 500
+                                      'message': 'Database not reachable or operation failed ' + str(e)}, 500
         finally:
             if 'ldapConnection' in locals() and ldapConnection.bound:
                 ldapConnection.unbind()
@@ -184,7 +183,7 @@ class Login(Resource):
 class Logout(Resource):
     # then logout where session gets deleted
     # Example
-    # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar http://cs3103.cs.unb.ca:8042/logout
+    # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/logout
     def delete(self):
         session.pop('username', None)
 
@@ -205,8 +204,8 @@ class UserLinks(Resource):
 
         username = session.get('username')
 
+        conn = None
         try:
-            # Establish database connection at the start within the try block
             conn = get_db_connection()
 
             links = []
@@ -229,7 +228,6 @@ class UserLinks(Resource):
         except MySQLError as e:
             return make_response(jsonify({"error": "Database error occurred"}), 500)
         finally:
-            # Ensure the connection is closed in the finally block
             if 'conn' in locals():
                 conn.close()
 
@@ -249,6 +247,7 @@ class CreateShortcut(Resource):
 
         username = session.get('username')
 
+        conn = None
         try:
             conn = get_db_connection()
 
@@ -286,6 +285,7 @@ class DeleteLink(Resource):
 
         username = session.get('username')
 
+        conn = None
         try:
             conn = get_db_connection()
 
@@ -314,8 +314,8 @@ class DeleteLink(Resource):
 
 class GetDestination(Resource):
     def get(self, shortcut):
+        conn = None
         try:
-            # Establish database connection at the start within the try block
             conn = get_db_connection()
 
             with conn.cursor() as cursor:
@@ -329,14 +329,13 @@ class GetDestination(Resource):
         except MySQLError as e:
             return make_response(jsonify({"error": "Database error occurred"}), 500)
         finally:
-            # Ensure the connection is closed in the finally block
             if 'conn' in locals():
                 conn.close()
 
 
 # Register resources
-api.add_resource(Login, '/users/login')
-api.add_resource(Logout, '/users/logout')
+api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
 api.add_resource(UserLinks, '/user/links')
 api.add_resource(CreateShortcut, '/links')
 api.add_resource(DeleteLink, '/link/<int:link_id>')
