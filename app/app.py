@@ -218,8 +218,10 @@ class UserLinks(Resource):
             # Format the links for the response
             formatted_links = [
                 {
+                    "linkId": link['linkId'],
                     "destination": link['destination'],
-                    "shortcut": link['shortcut']
+                    "shortcut": link['shortcut'],
+                    "username": link['username']
                 }
                 for link in links
             ]
