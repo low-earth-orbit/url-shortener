@@ -26,12 +26,12 @@ cgitb.enable()
 
 def get_db_connection():
     conn = pymysql.connect(
-                settings.DB_HOST,
-                settings.DB_USER,
-                settings.DB_PASSWD,
-                settings.DB_DATABASE,
-                charset='utf8mb4',
-                cursorclass=pymysql.cursors.DictCursor)
+        settings.DB_HOST,
+        settings.DB_USER,
+        settings.DB_PASSWD,
+        settings.DB_DATABASE,
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor)
     return conn
 
 
@@ -129,13 +129,7 @@ class Login(Resource):
             ldapConnection.bind()  # LDAP authentication
 
             # Set up app database connection
-            dbConnection = pymysql.connect(
-                settings.DB_HOST,
-                settings.DB_USER,
-                settings.DB_PASSWD,
-                settings.DB_DATABASE,
-                charset='utf8mb4',
-                cursorclass=pymysql.cursors.DictCursor)
+            dbConnection = get_db_connection()
 
             # Check if the user exists in database by calling stored procedure getUser
             with dbConnection.cursor() as cursor:
@@ -239,8 +233,6 @@ class UserLinks(Resource):
                 conn.close()
 
 
-
-
 # Resource for link shortening
 
 
@@ -273,9 +265,6 @@ class CreateShortcut(Resource):
         finally:
             if 'conn' in locals():
                 conn.close()
-
-
-
 
 
 # Resource for deleting a link
@@ -312,9 +301,6 @@ class DeleteLink(Resource):
                 conn.close()
 
 
-
-
-
 # Resource for getting link destination
 
 
@@ -329,7 +315,7 @@ class GetDestination(Resource):
                 result = cursor.fetchone()
 
             if result:
-                return redirect(result['destination'], code=302)  
+                return redirect(result['destination'], code=302)
             else:
                 return make_response(jsonify({"error": "Shortcut not found"}), 404)
         except pymysql.MySQLError as e:
@@ -338,7 +324,6 @@ class GetDestination(Resource):
             # Ensure the connection is closed in the finally block
             if 'conn' in locals():
                 conn.close()
-
 
 
 # Register resources
