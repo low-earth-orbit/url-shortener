@@ -85,7 +85,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: "success"
+                    example: "Success"
                     description: Indicates that the logout was successful.
                 required:
                   - status
@@ -104,7 +104,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: "fail"
+                    example: "Fail"
                     description: Indicates that no user session was found to log out.
                 required:
                   - status

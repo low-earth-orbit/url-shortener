@@ -187,10 +187,10 @@ class Logout(Resource):
     def delete(self):
         if 'username' in session:
             session.pop('username', None)
-            response = {'status': 'success'}
+            response = {'status': 'Success'}
             responseCode = 204
         else:
-            response = {'status': 'fail'}
+            response = {'status': 'Fail'}
             responseCode = 403
 
         return make_response(jsonify(response), responseCode)
@@ -218,7 +218,7 @@ class UserLinks(Resource):
             # Format the links for the response
             formatted_links = [
                 {
-                    "linkId": link['linkId'],
+                    "linkId": link['link_id'],
                     "destination": link['destination'],
                     "shortcut": link['shortcut'],
                     "username": link['username']
@@ -283,9 +283,8 @@ class DeleteLink(Resource):
             conn = get_db_connection()
 
             with conn.cursor() as cursor:
-                # Check if the link exists and belongs to the user
-                cursor.execute(
-                    'SELECT * FROM links WHERE link_id = %s AND username = %s', (link_id, username))
+                # Get the link that belongs to the user
+                cursor.callproc('getUserLink', [link_id, username])
                 link = cursor.fetchone()
 
                 if not link:

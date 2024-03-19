@@ -36,4 +36,6 @@ If the user does not exist: Returns an empty result set.
 
 `getUserLinks` retrieves all links created by a specific user. Takes `username` as input and returns all associated records from the `links` table.
 
+`getUserLink` retrieves the specific link of a user. It returns the result from `links` table where `link_id` and `username` match.
+
 `getLinkDestination` retrieves the original long URL. Takes `shortcut` as input and returns `destination` from the `links` table.

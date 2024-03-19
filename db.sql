@@ -90,6 +90,15 @@ BEGIN
 END //
 DELIMITER ;
 
+-- getUserLink
+DELIMITER //
+CREATE PROCEDURE getUserLink(IN _link_id INT, IN _username VARCHAR(255))
+BEGIN
+    SELECT * FROM links 
+    WHERE link_id = _link_id AND username = _username;
+END //
+DELIMITER ;
+
 -- getLinkDestination
 DELIMITER //
 DROP PROCEDURE IF EXISTS getLinkDestination;
