@@ -78,36 +78,12 @@ paths:
       responses:
         "204":
           description: Logout successful. Session invalidated.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: "Success"
-                    description: Indicates that the logout was successful.
-                required:
-                  - status
           headers:
             Set-Cookie:
               description: Clears the session cookie.
               schema:
                 type: string
                 example: "sessionId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure"
-        "404":
-          description: No active session found to invalidate.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: "Fail"
-                    description: Indicates that no user session was found to log out.
-                required:
-                  - status
   /users/links:
     get:
       summary: Retrieves all links created by a specific user

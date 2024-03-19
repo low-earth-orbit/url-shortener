@@ -185,15 +185,13 @@ class Logout(Resource):
     # Example
     # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar http://cs3103.cs.unb.ca:8042/logout
     def delete(self):
-        if 'username' in session:
-            session.pop('username', None)
-            response = {'status': 'Success'}
-            responseCode = 204
-        else:
-            response = {'status': 'Fail'}
-            responseCode = 404
+        session.pop('username', None)
 
-        return make_response(jsonify(response), responseCode)
+        response = make_response('', 204)
+        response.set_cookie('sessionId', '', expires=0,
+                            httponly=True, secure=True, path='/')
+
+        return response
 
 
 # Resource for retrieving user's links
@@ -294,7 +292,7 @@ class DeleteLink(Resource):
                 cursor.callproc('deleteLink', [link_id])
                 conn.commit()
 
-            return make_response(jsonify({"message": "Link deleted successfully"}), 204)
+            return make_response('', 204)
         except pymysql.MySQLError as e:
             return make_response(jsonify({"error": "Failed to delete link due to a database error."}), 500)
         finally:
