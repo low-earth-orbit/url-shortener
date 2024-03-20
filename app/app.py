@@ -92,12 +92,8 @@ api.add_resource(Developer, '/dev')
 
 
 class Login(Resource):
-    #
-    # Set Session and return Cookie
-    #
     # Example curl command:
     # curl -i -H "Content-Type: application/json" -X POST -d '{"username": "your unb username", "password": "your unb password"}' -c cookie-jar -k https://cs3103.cs.unb.ca:8042/login
-    #
     def post(self):
         if not request.json:
             abort(400)  # bad request
@@ -181,8 +177,7 @@ class Login(Resource):
 
 
 class Logout(Resource):
-    # then logout where session gets deleted
-    # Example
+    # Example curl command:
     # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/logout
     def delete(self):
         session.pop('username', None)
@@ -194,10 +189,12 @@ class Logout(Resource):
         return response
 
 
-# Resource for retrieving user's links
+# Resource for managing user's links
 
 
 class UserLinks(Resource):
+    # Example curl command:
+    # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
     def get(self):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -231,11 +228,8 @@ class UserLinks(Resource):
             if 'conn' in locals():
                 conn.close()
 
-
-# Resource for link shortening
-
-
-class CreateShortcut(Resource):
+    # Example curl command:
+    # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "https://cs3103.cs.unb.ca"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
     def post(self):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -279,6 +273,8 @@ class CreateShortcut(Resource):
 
 
 class DeleteLink(Resource):
+    # Example curl command:
+    # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links/<link_id>
     def delete(self, link_id):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -298,7 +294,7 @@ class DeleteLink(Resource):
                     return make_response(jsonify({"error": "Link not found for the user"}), 404)
 
                 # Delete the link using the stored procedure
-                cursor.callproc('deleteLink', link['link_id'])
+                cursor.callproc('deleteLink', (link['link_id'],))
                 conn.commit()
 
             return make_response('', 204)
@@ -337,9 +333,8 @@ class GetDestination(Resource):
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(UserLinks, '/user/links')
-api.add_resource(CreateShortcut, '/links')
-api.add_resource(DeleteLink, '/link/<int:link_id>')
-api.add_resource(GetDestination, '/links/shortcut/<string:shortcut>')
+api.add_resource(DeleteLink, '/user/links/<int:link_id>')
+api.add_resource(GetDestination, '/<string:shortcut>')
 
 if __name__ == "__main__":
     context = ('cert.pem', 'key.pem')

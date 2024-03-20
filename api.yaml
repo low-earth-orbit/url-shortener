@@ -103,7 +103,7 @@ paths:
           description: Database error
         "401":
           description: Authentication required
-  /links:
+  user/links:
     post:
       summary: Creates a new short link
       tags:
@@ -129,7 +129,7 @@ paths:
           description: Authentication required
         "500":
           description: Database or server error
-  /links/{linkId}:
+  user/links/{linkId}:
     delete:
       summary: Deletes a specific link
       tags:
@@ -151,7 +151,7 @@ paths:
           description: Authentication required
         "500":
           description: Database error
-  /links/shortcut/{shortcut}:
+  /{shortcut}:
     get:
       summary: Retrieves the destination URL
       tags:
