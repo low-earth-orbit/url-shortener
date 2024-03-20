@@ -144,16 +144,12 @@ class Login(Resource):
 
             # Set username in session
             session['username'] = username
-        except LDAPException as e:
-            if isinstance(e, LDAPOperationResult) and e.result == "invalidCredentials":
-                response, responseCode = {
-                    'status': 'Unauthorized', 'message': 'Invalid username or password'}, 401
-            else:
-                response, responseCode = {
-                    'status': 'Internal Server Error', 'message': 'An LDAP error occurred'}, 500
+        except LDAPException:
+            response, responseCode = {
+                'status': 'Unauthorized', 'message': 'Invalid username or password'}, 401
         except MySQLError as e:
             response, responseCode = {'status': 'Internal Server Error',
-                                      'message': 'Database not reachable or operation failed ' + str(e)}, 500
+                                      'message': 'Database not reachable or operation failed'}, 500
         finally:
             if 'ldapConnection' in locals() and ldapConnection.bound:
                 ldapConnection.unbind()
