@@ -82,7 +82,7 @@ api.add_resource(Developer, '/dev')
 
 class Login(Resource):
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X POST -d '{"username": "<username>", "password": "<password>"}' -c cookie-jar -k https://cs3103.cs.unb.ca:8042/login
+    # curl -i -H "Content-Type: application/json" -X POST -d '{"username": "<username>", "password": "<password>"}' -b cookie-jar -c cookie-jar -k https://cs3103.cs.unb.ca:8042/login
     def post(self):
         if not request.json:
             abort(400)  # bad request
@@ -98,8 +98,8 @@ class Login(Resource):
             abort(400)  # bad request
 
         # If the user is already logged in
-        if request_params['username'] in session:
-            return make_response(jsonify({'status': 'OK'}), 200)
+        if 'username' in session and session['username'] == request_params['username']:
+            return make_response(jsonify({'status': 'Already logged in'}), 200)
 
         dbConnection = None
         try:
