@@ -140,7 +140,7 @@ class Login(Resource):
             else:
                 username = result['username']
                 response = {'status': 'OK', 'username': username}
-                responseCode = 201
+                responseCode = 200
 
             # Set username in session
             session['username'] = username
