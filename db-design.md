@@ -27,7 +27,7 @@ The database for the project consists of two database tables, `users` and `links
 
 `addUser` adds a new user in the database after LDAP authentication. Accepts `username` as input and inserts a new record into the `users` table if it doesn’t already exist.
 
-`getUser` retrieves information about a user from the `users` table based on their `username`. Since the users table contains only one attribute, `username`, this procedure checks for the existence of a specified `username` within the table. If the user exists: Returns a single row containing `username`.
+`getUser` retrieves information about a user from the `users` table based on their `username`. Since the `users` table contains only one attribute, `username`, this procedure checks for the existence of a specified `username` within the table. If the user exists: Returns a single row containing `username`.
 If the user does not exist: Returns an empty result set.
 
 `createLink` creates a new short link. Accepts the original URL and `username` as input, generates a unique shortcut, and adds a new entry to the `links` table.
