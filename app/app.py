@@ -8,15 +8,9 @@ from flask_restful import reqparse, Resource, Api
 from flask_session import Session
 import pymysql.cursors
 from pymysql import MySQLError
-import json
-import os
-import ssl
 from ldap3 import Server, Connection, ALL
 from ldap3.core.exceptions import *
 import cgitb
-import cgi
-import sys
-import datetime
 import validators
 
 # import mutagen
@@ -51,11 +45,9 @@ Session(app)
 # Running api service
 api = Api(app)
 
-
-####################################################################################
-#
 # Error handlers
-#
+
+
 @app.errorhandler(400)  # decorators to add to 400 response
 def not_found(error):
     return make_response(jsonify({"status": "Bad request"}), 400)
@@ -65,14 +57,11 @@ def not_found(error):
 def not_found(error):
     return make_response(jsonify({"status": "Resource not found"}), 404)
 
-####################################################################################
-#
-# Static Endpoints for humans
-#
+
+# App root
 
 
 class Root(Resource):
-    # get method. What might others be aptly named? (hint: post)
     def get(self):
         return app.send_static_file('index.html')
 
@@ -93,7 +82,7 @@ api.add_resource(Developer, '/dev')
 
 class Login(Resource):
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X POST -d '{"username": "your unb username", "password": "your unb password"}' -c cookie-jar -k https://cs3103.cs.unb.ca:8042/login
+    # curl -i -H "Content-Type: application/json" -X POST -d '{"username": "<username>", "password": "<password>"}' -c cookie-jar -k https://cs3103.cs.unb.ca:8042/login
     def post(self):
         if not request.json:
             abort(400)  # bad request
@@ -229,7 +218,7 @@ class UserLinks(Resource):
                 conn.close()
 
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "https://cs3103.cs.unb.ca"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+    # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "<full_url>"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
     def post(self):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -309,6 +298,8 @@ class DeleteLink(Resource):
 
 
 class GetDestination(Resource):
+    # Example curl command:
+    # curl -i -H "Content-Type: application/json" -X GET -k https://cs3103.cs.unb.ca:8042/<shortcut>
     def get(self, shortcut):
         conn = None
         try:
