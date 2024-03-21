@@ -17,12 +17,15 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS addUser;
 CREATE PROCEDURE addUser(IN _username VARCHAR(255))
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SELECT 'Error occurred in addUser';
-    END;
-
     INSERT INTO users(username) VALUES (_username);
+END //
+DELIMITER ;
+
+-- getUser
+DELIMITER //
+CREATE PROCEDURE getUser(IN _username VARCHAR(255))
+BEGIN
+    SELECT * FROM users WHERE username = _username;
 END //
 DELIMITER ;
 
@@ -50,7 +53,7 @@ BEGIN
 
     -- Insert the new link with the unique shortcut
     INSERT INTO links(destination, shortcut, username) VALUES (_destination, _shortcut, _username);
-    SELECT _shortcut AS generated_shortcut; -- returns generated shortcut
+    SELECT * FROM links WHERE shortcut = _shortcut; -- returns the created link
 END //
 DELIMITER ;
 
@@ -79,6 +82,15 @@ BEGIN
     END;
 
     SELECT * FROM links WHERE username = _username;
+END //
+DELIMITER ;
+
+-- getUserLink
+DELIMITER //
+CREATE PROCEDURE getUserLink(IN _link_id INT, IN _username VARCHAR(255))
+BEGIN
+    SELECT * FROM links 
+    WHERE link_id = _link_id AND username = _username;
 END //
 DELIMITER ;
 

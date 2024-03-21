@@ -25,12 +25,17 @@ The database for the project consists of two database tables, `users` and `links
 
 ## List of Stored Procedures
 
-`addUser` adds a new user in the database after LDAP authentication. Accepts `username` as input and inserts a new record into the users table if it doesn’t already exist.
+`addUser` adds a new user in the database after LDAP authentication. Accepts `username` as input and inserts a new record into the `users` table if it doesn’t already exist.
 
-`createLink` creates a new short link. Accepts the original URL and `username` as input, generates a unique shortcut, and adds a new entry to the links table.
+`getUser` retrieves information about a user from the `users` table based on their `username`. Since the `users` table contains only one attribute, `username`, this procedure checks for the existence of a specified `username` within the table. If the user exists: Returns a single row containing `username`.
+If the user does not exist: Returns an empty result set.
 
-`deleteLink` deletes a specific link. Accepts `link_id` as input and removes the corresponding record from the links table.
+`createLink` creates a new short link. Accepts the original URL and `username` as input, generates a unique shortcut, and adds a new entry to the `links` table.
 
-`getUserLinks` retrieves all links created by a specific user. Takes `username` as input and returns all associated records from the links table.
+`deleteLink` deletes a specific link. Accepts `link_id` as input and removes the corresponding record from the `links` table.
 
-`getLinkDestination` retrieves the original long URL. Takes `shortcut` as input and returns `destination` from the links table.
+`getUserLinks` retrieves all links created by a specific user. Takes `username` as input and returns all associated records from the `links` table.
+
+`getUserLink` retrieves the specific link of a user. It returns the result from `links` table where `link_id` and `username` match.
+
+`getLinkDestination` retrieves the original long URL. Takes `shortcut` as input and returns `destination` from the `links` table.
