@@ -93,6 +93,7 @@ new Vue({
           this.links = response.data;
         })
         .catch((error) => {
+          alert("Failed to fetch user links.");
           console.error("Failed to fetch links:", error);
         });
     },
