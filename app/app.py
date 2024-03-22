@@ -6,6 +6,7 @@ import settings  # Our server and db settings, stored in settings.py
 from flask import Flask, jsonify, abort, request, make_response, session, redirect
 from flask_restful import reqparse, Resource, Api
 from flask_session import Session
+from flask_cors import CORS
 import pymysql.cursors
 from pymysql import MySQLError
 from ldap3 import Server, Connection, ALL
@@ -35,11 +36,18 @@ def is_valid_url(url):
 
 
 app = Flask(__name__, static_url_path='/static')
+
+CORS(app, supports_credentials=True)  # Enable cross-origin requests
+
 # Set Server-side session config: Save sessions in the local app directory.
 app.secret_key = settings.SECRET_KEY
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_NAME'] = 'peanutButter'
 app.config['SESSION_COOKIE_DOMAIN'] = settings.APP_HOST
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # Enable cross-origin requests
+
+# Initialize Session
 Session(app)
 
 # Running api service
