@@ -65,6 +65,12 @@ def not_found(error):
 def not_found(error):
     return make_response(jsonify({"status": "Resource not found"}), 404)
 
+@app.route('/check-session', methods=['GET'])
+def check_session():
+    if 'username' in session:
+        return jsonify({'isLoggedIn': True, 'username': session['username']})
+    else:
+        return jsonify({'isLoggedIn': False})
 
 # App root
 

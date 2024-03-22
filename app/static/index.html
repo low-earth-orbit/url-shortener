@@ -7,6 +7,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔗</text></svg>"
+    />
 
     <!-- Bootstrap CSS -->
     <link
@@ -15,24 +19,37 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
-  </head>
-  <body>
+
     <!--Vue development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
     <div id="app" class="container">
       <h1>URL Shortener</h1>
 
       <!-- Login Form -->
-      <form @submit.prevent="login">
-        <input type="text" v-model="username" placeholder="Username" required />
-        <input
-          type="password"
-          v-model="password"
-          placeholder="Password"
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
+      <div v-if="!isLoggedIn">
+        <form @submit.prevent="login">
+          <input
+            type="text"
+            v-model="username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            v-model="password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+      </div>
+
+      <!-- Logout Button -->
+      <div v-if="isLoggedIn">
+        <button @click="logout">Logout</button>
+      </div>
 
       <!-- URL Shortening Form -->
       <form @submit.prevent="createLink" v-if="isLoggedIn">
@@ -40,16 +57,19 @@
         <button type="submit">Shorten</button>
       </form>
 
-      <!-- Display Shortened URLs -->
+      <!-- List of links -->
       <ul v-if="isLoggedIn">
         <li v-for="link in links" :key="link.linkId">
           {{ link.destination }} -
-          <a :href="serviceURL + '/' + link.shortcut" target="_blank"
-            >{{ link.shortcut }}</a
-          >
+          <a :href="serviceURL + '/' + link.shortcut" target="_blank">
+            {{ link.shortcut }}
+          </a>
+          <!-- Copy Button -->
           <button @click="copyToClipboard(serviceURL + '/' + link.shortcut)">
             Copy
           </button>
+          <!-- Delete Button -->
+          <button @click="deleteLink(link.linkId)">Delete</button>
         </li>
       </ul>
     </div>

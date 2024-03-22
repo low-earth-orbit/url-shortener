@@ -23,9 +23,11 @@ new Vue({
           .then((response) => {
             if (
               response.data.status === "OK" ||
+              response.data.status === "Created" ||
               response.data.status === "Already logged in"
             ) {
               this.isLoggedIn = true;
+              this.fetchLinks();
             } else {
               alert(
                 "The username or password was incorrect. Please try again."
@@ -36,7 +38,7 @@ new Vue({
           })
           .catch((error) => {
             alert("Error during login. Please try again.");
-            console.log(error);
+            console.log("Logout failed:", error);
           });
       } else {
         alert("Both username and password fields are required.");
@@ -47,8 +49,10 @@ new Vue({
         .delete(this.serviceURL + "/logout", { withCredentials: true })
         .then(() => {
           this.isLoggedIn = false;
+          this.links = [];
         })
         .catch((error) => {
+          alert("Logout failed. Please try again.");
           console.error("Logout failed:", error);
         });
     },
@@ -66,23 +70,60 @@ new Vue({
           this.newLink = "";
         })
         .catch((error) => {
-          // Handle errors
+          alert("Creating shortcut failed. Please try again.");
+          console.error("Creating shortcut failed:", error);
         });
     },
     copyToClipboard(shortcut) {
       navigator.clipboard
         .writeText(shortcut)
         .then(() => {
-          console.log("Shortened URL copied to clipboard");
+          alert("Shortcut copied to clipboard:", shortcut);
+          console.log("Shortcut copied to clipboard");
         })
-        .catch((err) => {
-          console.error("Failed to copy to clipboard", err);
+        .catch((error) => {
+          alert("Failed to copy to clipboard. Please try again.");
+          console.error("Failed to copy to clipboard", error);
         });
     },
-    // TODO: other methods for getting links, logging out, etc.
+    fetchLinks() {
+      axios
+        .get(this.serviceURL + "/user/links", { withCredentials: true })
+        .then((response) => {
+          this.links = response.data;
+        })
+        .catch((error) => {
+          console.error("Failed to fetch links:", error);
+        });
+    },
+    deleteLink(linkId) {
+      axios
+        .delete(this.serviceURL + "/user/links/" + linkId, {
+          withCredentials: true,
+        })
+        .then(() => {
+          this.links = this.links.filter((link) => link.linkId !== linkId);
+        })
+        .catch((error) => {
+          alert(
+            "Failed to copy to clipboard. Please try again or refresh the page."
+          );
+          console.error("Failed to delete link:", error);
+        });
+    },
   },
-  // On created, check if user is already logged in
   created() {
-    // Attempt to get the user's links if a session already exists
+    axios
+      .get(this.serviceURL + "/check-session", { withCredentials: true })
+      .then((response) => {
+        this.isLoggedIn = response.data.isLoggedIn;
+        if (this.isLoggedIn) {
+          this.fetchLinks();
+        }
+      })
+      .catch((error) => {
+        this.isLoggedIn = false;
+        console.error("Session check failed:", error);
+      });
   },
 });
