@@ -47,6 +47,9 @@ new Vue({
         .delete(this.serviceURL + "/logout", { withCredentials: true })
         .then(() => {
           this.isLoggedIn = false;
+          this.username = "";
+          this.password = "";
+          this.links = [];
         })
         .catch((error) => {
           console.error("Logout failed:", error);
@@ -66,7 +69,7 @@ new Vue({
           this.newLink = "";
         })
         .catch((error) => {
-          // Handle errors
+          console.error("Creating shortcut failed:", error);
         });
     },
     copyToClipboard(shortcut) {
@@ -79,10 +82,29 @@ new Vue({
           console.error("Failed to copy to clipboard", err);
         });
     },
-    // TODO: other methods for getting links, logging out, etc.
+    fetchLinks() {
+      axios
+        .get(this.serviceURL + "/user/links", { withCredentials: true })
+        .then((response) => {
+          this.links = response.data;
+        })
+        .catch((error) => {
+          console.error("Failed to fetch links:", error);
+        });
+    },
   },
-  // On created, check if user is already logged in
   created() {
-    // Attempt to get the user's links if a session already exists
+    axios
+      .get(this.serviceURL + "/check-session", { withCredentials: true })
+      .then((response) => {
+        this.isLoggedIn = response.data.isLoggedIn;
+        if (this.isLoggedIn) {
+          this.fetchLinks();
+        }
+      })
+      .catch((error) => {
+        this.isLoggedIn = false;
+        console.error("Session check failed:", error);
+      });
   },
 });
