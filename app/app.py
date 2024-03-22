@@ -70,7 +70,7 @@ def check_session():
     if 'username' in session:
         return jsonify({'isLoggedIn': True, 'username': session['username']})
     else:
-        return jsonify({'isLoggedIn': False}), 401
+        return jsonify({'isLoggedIn': False})
 
 # App root
 
