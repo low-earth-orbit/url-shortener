@@ -103,7 +103,6 @@ paths:
           description: Database error
         "401":
           description: Authentication required
-  user/links:
     post:
       summary: Creates a new short link
       tags:
@@ -115,7 +114,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/NewLinkRequest"
+              type: object
+              properties:
+                destination:
+                  type: string
+                  format: uri
+              required:
+                - destination
       responses:
         "201":
           description: Link created successfully
@@ -129,7 +134,7 @@ paths:
           description: Authentication required
         "500":
           description: Database or server error
-  user/links/{linkId}:
+  /user/links/{linkId}:
     delete:
       summary: Deletes a specific link
       tags:
@@ -182,14 +187,6 @@ components:
       in: cookie
       name: sessionId
   schemas:
-    NewLinkRequest:
-      type: object
-      properties:
-        destination:
-          type: string
-          format: uri
-      required:
-        - destination
     Link:
       type: object
       properties:

@@ -69,13 +69,12 @@ class Root(Resource):
 api.add_resource(Root, '/')
 
 
-class Developer(Resource):
-   # get method. What might others be aptly named? (hint: post)
+class ApiDoc(Resource):
     def get(self):
-        return app.send_static_file('developer.html')
+        return app.send_static_file('api.html')
 
 
-api.add_resource(Developer, '/dev')
+api.add_resource(ApiDoc, '/api')
 
 # Login
 
