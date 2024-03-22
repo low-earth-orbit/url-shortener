@@ -26,6 +26,9 @@ new Vue({
               response.data.status === "Already logged in"
             ) {
               this.isLoggedIn = true;
+              if (this.isLoggedIn) {
+                this.fetchLinks();
+              }
             } else {
               alert(
                 "The username or password was incorrect. Please try again."
