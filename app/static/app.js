@@ -23,12 +23,11 @@ new Vue({
           .then((response) => {
             if (
               response.data.status === "OK" ||
+              response.data.status === "Created" ||
               response.data.status === "Already logged in"
             ) {
               this.isLoggedIn = true;
-              if (this.isLoggedIn) {
-                this.fetchLinks();
-              }
+              this.fetchLinks();
             } else {
               alert(
                 "The username or password was incorrect. Please try again."
@@ -39,7 +38,7 @@ new Vue({
           })
           .catch((error) => {
             alert("Error during login. Please try again.");
-            console.log(error);
+            console.log("Logout failed:", error);
           });
       } else {
         alert("Both username and password fields are required.");
@@ -50,11 +49,10 @@ new Vue({
         .delete(this.serviceURL + "/logout", { withCredentials: true })
         .then(() => {
           this.isLoggedIn = false;
-          this.username = "";
-          this.password = "";
           this.links = [];
         })
         .catch((error) => {
+          alert("Logout failed. Please try again.");
           console.error("Logout failed:", error);
         });
     },
@@ -72,6 +70,7 @@ new Vue({
           this.newLink = "";
         })
         .catch((error) => {
+          alert("Creating shortcut failed. Please try again.");
           console.error("Creating shortcut failed:", error);
         });
     },
@@ -79,10 +78,12 @@ new Vue({
       navigator.clipboard
         .writeText(shortcut)
         .then(() => {
-          console.log("Shortened URL copied to clipboard");
+          alert("Shortcut copied to clipboard:", shortcut);
+          console.log("Shortcut copied to clipboard");
         })
-        .catch((err) => {
-          console.error("Failed to copy to clipboard", err);
+        .catch((error) => {
+          alert("Failed to copy to clipboard. Please try again.");
+          console.error("Failed to copy to clipboard", error);
         });
     },
     fetchLinks() {
