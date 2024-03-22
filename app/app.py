@@ -77,12 +77,12 @@ class Root(Resource):
 api.add_resource(Root, '/')
 
 
-class ApiDoc(Resource):
+class Api(Resource):
     def get(self):
         return app.send_static_file('api.html')
 
 
-api.add_resource(ApiDoc, '/api')
+api.add_resource(Api, '/api')
 
 # Login
 
