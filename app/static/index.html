@@ -57,16 +57,19 @@
         <button type="submit">Shorten</button>
       </form>
 
-      <!-- Display Shortened URLs -->
+      <!-- List of links -->
       <ul v-if="isLoggedIn">
         <li v-for="link in links" :key="link.linkId">
           {{ link.destination }} -
-          <a :href="serviceURL + '/' + link.shortcut" target="_blank"
-            >{{ link.shortcut }}</a
-          >
+          <a :href="serviceURL + '/' + link.shortcut" target="_blank">
+            {{ link.shortcut }}
+          </a>
+          <!-- Copy Button -->
           <button @click="copyToClipboard(serviceURL + '/' + link.shortcut)">
             Copy
           </button>
+          <!-- Delete Button -->
+          <button @click="deleteLink(link.linkId)">Delete</button>
         </li>
       </ul>
     </div>

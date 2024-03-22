@@ -96,6 +96,21 @@ new Vue({
           console.error("Failed to fetch links:", error);
         });
     },
+    deleteLink(linkId) {
+      axios
+        .delete(this.serviceURL + "/user/links/" + linkId, {
+          withCredentials: true,
+        })
+        .then(() => {
+          this.links = this.links.filter((link) => link.linkId !== linkId);
+        })
+        .catch((error) => {
+          alert(
+            "Failed to copy to clipboard. Please try again or refresh the page."
+          );
+          console.error("Failed to delete link:", error);
+        });
+    },
   },
   created() {
     axios
