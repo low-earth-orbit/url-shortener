@@ -116,6 +116,8 @@ new Vue({
         this.isLoggedIn = response.data.isLoggedIn;
         if (this.isLoggedIn) {
           this.fetchLinks();
+        } else {
+          $("#loginModal").modal("show");
         }
       })
       .catch((error) => {
