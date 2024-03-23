@@ -20,26 +20,16 @@ new Vue({
             },
             { withCredentials: true }
           )
-          .then((response) => {
-            if (
-              response.data.status === "OK" ||
-              response.data.status === "Created" ||
-              response.data.status === "Already logged in"
-            ) {
-              this.isLoggedIn = true;
-              this.fetchLinks();
-            } else {
-              alert(
-                "The username or password was incorrect. Please try again."
-              );
-            }
+          .then(() => {
+            this.isLoggedIn = true;
+            this.fetchLinks();
+            this.username = "";
           })
           .catch((error) => {
             alert("Error during login. Please try again.");
             console.log("Logout failed:", error);
           })
           .finally(() => {
-            this.username = "";
             this.password = "";
           });
       } else {
