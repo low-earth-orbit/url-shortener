@@ -25,53 +25,131 @@
   </head>
   <body>
     <div id="app" class="container">
-      <h1>URL Shortener</h1>
+      <!-- Nav Bar -->
+      <nav class="navbar navbar-expand-md bg-body py-3">
+        <a class="navbar-brand d-flex align-items-center" href="#"
+          ><span
+            class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+              class="bi bi-link-45deg"
+            >
+              <path
+                d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"
+              ></path>
+              <path
+                d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"
+              ></path></svg></span
+          ><span>Shortify</span></a
+        ><button
+          data-bs-toggle="collapse"
+          class="navbar-toggler"
+          data-bs-target="#navcol-3"
+        >
+          <span class="visually-hidden">Sign in</span
+          ><span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse d-lg-flex justify-content-lg-end"
+          id="navcol-3"
+        >
+          <!-- Login Form -->
+          <form class="form-inline" @submit.prevent="login" v-if="!isLoggedIn">
+            <input
+              type="text"
+              class="form-control mr-sm-1"
+              v-model="username"
+              placeholder="Username"
+              required
+            />
+            <input
+              type="password"
+              class="form-control mr-sm-1"
+              v-model="password"
+              placeholder="Password"
+              required
+            />
+            <button class="btn btn-primary" type="submit">Sign In</button>
+          </form>
+          <!-- Logout Button -->
+          <button
+            v-if="isLoggedIn"
+            class="btn btn-primary"
+            type="button"
+            @click="logout"
+          >
+            Sign Out
+          </button>
+        </div>
+      </nav>
 
-      <!-- Login Form -->
-      <div v-if="!isLoggedIn">
-        <form @submit.prevent="login">
-          <input
-            type="text"
-            v-model="username"
-            placeholder="Username"
-            required
-          />
-          <input
-            type="password"
-            v-model="password"
-            placeholder="Password"
-            required
-          />
-          <button type="submit">Login</button>
-        </form>
-      </div>
-
-      <!-- Logout Button -->
-      <div v-if="isLoggedIn">
-        <button @click="logout">Logout</button>
-      </div>
+      <!-- Introduction -->
+      <section class="text-center py-4 py-xl-5">
+        <p class="font-weight-bold text-primary mb-2">
+          Proud to introduce Shortify
+        </p>
+        <h1 class="font-weight-bold mb-4">Make sense of every link.</h1>
+      </section>
 
       <!-- URL Shortening Form -->
-      <form @submit.prevent="createLink" v-if="isLoggedIn">
-        <input type="url" v-model="newLink" placeholder="Enter URL" required />
-        <button type="submit">Shorten</button>
-      </form>
+      <section class="py-4 py-xl-5">
+        <form class="text-start" @submit.prevent="createLink">
+          <label class="form-label font-weight-bold">Enter a long URL</label
+          ><input
+            class="form-control"
+            type="url"
+            placeholder="Example: https://www.unb.ca"
+            v-model="newLink"
+            disabled="isLoggedIn"
+            :disabled="!isLoggedIn"
+            required
+          />
+        </form>
+        <div class="text-center">
+          <button
+            class="align-items-center btn btn-primary fs-5 me-2 py-2 px-4"
+            type="submit"
+            style="margin-top: 18px; margin-bottom: 18px"
+            :disabled="!isLoggedIn"
+          >
+            Make Shortcut
+          </button>
+        </div>
+      </section>
 
       <!-- List of links -->
-      <ul v-if="isLoggedIn">
-        <li v-for="link in links" :key="link.linkId">
-          {{ link.destination }} -
-          <a :href="serviceURL + '/' + link.shortcut" target="_blank">
-            {{ link.shortcut }}
-          </a>
-          <!-- Copy Button -->
-          <button @click="copyToClipboard(serviceURL + '/' + link.shortcut)">
-            Copy
-          </button>
-          <!-- Delete Button -->
-          <button @click="deleteLink(link.linkId)">Delete</button>
-        </li>
-      </ul>
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <ul class="list-group" v-if="isLoggedIn">
+            <li
+              v-for="link in links"
+              :key="link.linkId"
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              {{ link.destination }}
+              <a :href="serviceURL + '/' + link.shortcut" target="_blank"
+                >{{ link.shortcut }}</a
+              >
+              <button
+                @click="copyToClipboard(serviceURL + '/' + link.shortcut)"
+                class="btn btn-secondary btn-sm"
+              >
+                Copy
+              </button>
+              <button
+                @click="deleteLink(link.linkId)"
+                class="btn btn-danger btn-sm"
+              >
+                Delete
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <!-- Include Axios -->
