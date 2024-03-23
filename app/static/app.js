@@ -33,12 +33,14 @@ new Vue({
                 "The username or password was incorrect. Please try again."
               );
             }
-            this.username = "";
-            this.password = "";
           })
           .catch((error) => {
             alert("Error during login. Please try again.");
             console.log("Logout failed:", error);
+          })
+          .finally(() => {
+            this.username = "";
+            this.password = "";
           });
       } else {
         alert("Both username and password fields are required.");
@@ -67,11 +69,13 @@ new Vue({
         )
         .then((response) => {
           this.links.push(response.data);
-          this.newLink = "";
         })
         .catch((error) => {
           alert("Creating shortcut failed. Please try again.");
           console.error("Creating shortcut failed:", error);
+        })
+        .finally(() => {
+          this.newLink = "";
         });
     },
     copyToClipboard(shortcut) {
