@@ -60,6 +60,7 @@ new Vue({
         )
         .then((response) => {
           this.links.push(response.data);
+          this.copyToClipboard(this.serviceURL + "/" + response.data.shortcut);
         })
         .catch((error) => {
           alert("Creating shortcut failed. Please try again.");

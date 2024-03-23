@@ -114,7 +114,7 @@
         <p class="font-weight-bold text-primary mb-2">
           Proud to introduce Shortify
         </p>
-        <h1 class="font-weight-bold mb-4">Make sense of every link.</h1>
+        <h1 class="font-weight-bold mb-4">Making sense of every link.</h1>
       </section>
 
       <!-- URL Shortening Form -->
@@ -130,17 +130,17 @@
             :disabled="!isLoggedIn"
             required
           />
+          <div class="text-center">
+            <button
+              class="align-items-center mt-4 fs-5 me-2 py-2 px-4"
+              :class="{'btn btn-primary': isLoggedIn, 'btn btn-secondary': !isLoggedIn}"
+              type="submit"
+              :disabled="!isLoggedIn"
+            >
+              Make Shortcut
+            </button>
+          </div>
         </form>
-        <div class="text-center">
-          <button
-            class="align-items-center btn btn-primary fs-5 me-2 py-2 px-4"
-            type="submit"
-            style="margin-top: 18px; margin-bottom: 18px"
-            :disabled="!isLoggedIn"
-          >
-            Make Shortcut
-          </button>
-        </div>
       </section>
 
       <!-- List of links -->
