@@ -3,6 +3,16 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
+    <title>Shortify | URL Shortener</title>
+    <meta
+      name="description"
+      content="Shortify is the URL shortener making sense of every link."
+    />
+    <meta
+      name="keywords"
+      content="URL Shortener, Link Shortener, Short Links"
+    />
+    <meta name="author" content="Leo Hong; Anh Tran" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -12,74 +22,191 @@
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔗</text></svg>"
     />
 
+    <!-- font-awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
       crossorigin="anonymous"
     />
 
-    <!--Vue development version, includes helpful console warnings -->
+    <!-- TODO: Vue development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   <body>
     <div id="app" class="container">
-      <h1>URL Shortener</h1>
+      <!-- Nav Bar -->
+      <nav class="navbar navbar-light">
+        <a class="navbar-brand d-flex" href="#">🔗Shortify</a>
+        <!-- Navbar content -->
+        <div class="justify-content-lg-end" id="navContent">
+          <!-- Login/Logout Button -->
+          <button
+            v-if="!isLoggedIn"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#loginModal"
+          >
+            Log In
+          </button>
+          <button v-if="isLoggedIn" class="btn btn-secondary" @click="logout">
+            Log Out
+          </button>
+        </div>
+      </nav>
 
-      <!-- Login Form -->
-      <div v-if="!isLoggedIn">
-        <form @submit.prevent="login">
-          <input
-            type="text"
-            v-model="username"
-            placeholder="Username"
-            required
-          />
-          <input
-            type="password"
-            v-model="password"
-            placeholder="Password"
-            required
-          />
-          <button type="submit">Login</button>
-        </form>
+      <!-- Login Modal -->
+      <div
+        class="modal fade"
+        id="loginModal"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="loginModalTitle"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loginModalTitle">🚀User Login</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form @submit.prevent="login">
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    v-model="username"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    v-model="password"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary">Log In</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Logout Button -->
-      <div v-if="isLoggedIn">
-        <button @click="logout">Logout</button>
-      </div>
+      <!-- Introduction -->
+      <section class="text-center my-2 my-lg-3 my-xl-5">
+        <p class="font-weight-bold text-primary my-2">
+          Proud to introduce Shortify
+        </p>
+        <h1 class="font-weight-bold my-2">Making sense of every link.</h1>
+      </section>
 
       <!-- URL Shortening Form -->
-      <form @submit.prevent="createLink" v-if="isLoggedIn">
-        <input type="url" v-model="newLink" placeholder="Enter URL" required />
-        <button type="submit">Shorten</button>
-      </form>
+      <section class="py-4 py-xl-5">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <form class="text-start" @submit.prevent="createLink">
+                <label class="form-label font-weight-bold"
+                  >Shorten a long URL</label
+                ><input
+                  class="form-control"
+                  type="url"
+                  placeholder="Example: https://unb.ca"
+                  v-model="newLink"
+                  disabled="isLoggedIn"
+                  :disabled="!isLoggedIn"
+                  required
+                />
+                <div class="text-center">
+                  <button
+                    class="align-items-center mt-4 fs-5 me-2 py-2 px-4"
+                    :class="{'btn btn-primary': isLoggedIn, 'btn btn-secondary': !isLoggedIn}"
+                    type="submit"
+                    :disabled="!isLoggedIn"
+                  >
+                    Make Shortcut
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- List of links -->
-      <ul v-if="isLoggedIn">
-        <li v-for="link in links" :key="link.linkId">
-          {{ link.destination }} -
-          <a :href="serviceURL + '/' + link.shortcut" target="_blank">
-            {{ link.shortcut }}
-          </a>
-          <!-- Copy Button -->
-          <button @click="copyToClipboard(serviceURL + '/' + link.shortcut)">
-            Copy
-          </button>
-          <!-- Delete Button -->
-          <button @click="deleteLink(link.linkId)">Delete</button>
-        </li>
-      </ul>
+      <div
+        v-if="isLoggedIn && links.length > 0"
+        class="row justify-content-center my-2 my-lg-3 my-xl-5"
+      >
+        <div class="col-md-10">
+          <div class="table-responsive">
+            <table class="table table-sm table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Destination</th>
+                  <th scope="col">Shortcut</th>
+                  <th scope="col">Copy</th>
+                  <th scope="col">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="link in links" :key="link.linkId">
+                  <td>{{ link.destination }}</td>
+                  <td>
+                    <a :href="serviceURL + '/' + link.shortcut" target="_blank"
+                      >{{ link.shortcut }}</a
+                    >
+                  </td>
+                  <td>
+                    <button
+                      @click="copyToClipboard(serviceURL + '/' + link.shortcut)"
+                      class="btn btn-secondary btn-sm"
+                    >
+                      <i class="fa-regular fa-copy"></i>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      @click="deleteLink(link.linkId)"
+                      class="btn btn-danger btn-sm"
+                    >
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- End of list of links -->
     </div>
 
     <!-- Include Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- static/app.js file for server -->
+    <!-- app.js -->
     <script src="static/app.js"></script>
-    <!-- app.js file for local development only -->
-    <script src="app.js"></script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script

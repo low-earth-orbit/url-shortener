@@ -37,15 +37,15 @@ def is_valid_url(url):
 
 app = Flask(__name__, static_url_path='/static')
 
-CORS(app, supports_credentials=True)  # For local development only
+CORS(app, supports_credentials=True)  # TODO: For local development only
 
 # Set Server-side session config: Save sessions in the local app directory.
 app.secret_key = settings.SECRET_KEY
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_NAME'] = 'peanutButter'
 app.config['SESSION_COOKIE_DOMAIN'] = settings.APP_HOST
-app.config['SESSION_COOKIE_SECURE'] = True  # For local development only
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # For local development only
+app.config['SESSION_COOKIE_SECURE'] = True  # TODO: For local development only
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # TODO: For local development only
 
 # Initialize Session
 Session(app)

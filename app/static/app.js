@@ -20,25 +20,18 @@ new Vue({
             },
             { withCredentials: true }
           )
-          .then((response) => {
-            if (
-              response.data.status === "OK" ||
-              response.data.status === "Created" ||
-              response.data.status === "Already logged in"
-            ) {
-              this.isLoggedIn = true;
-              this.fetchLinks();
-            } else {
-              alert(
-                "The username or password was incorrect. Please try again."
-              );
-            }
+          .then(() => {
+            this.isLoggedIn = true;
+            $("#loginModal").modal("hide");
+            this.fetchLinks();
             this.username = "";
-            this.password = "";
           })
           .catch((error) => {
             alert("Error during login. Please try again.");
             console.log("Logout failed:", error);
+          })
+          .finally(() => {
+            this.password = "";
           });
       } else {
         alert("Both username and password fields are required.");
@@ -61,24 +54,27 @@ new Vue({
         .post(
           "https://cs3103.cs.unb.ca:8042/user/links",
           {
-            destination: this.newLink,
+            destination: this.newLink.trim(),
           },
           { withCredentials: true }
         )
         .then((response) => {
           this.links.push(response.data);
-          this.newLink = "";
+          this.copyToClipboard(this.serviceURL + "/" + response.data.shortcut);
         })
         .catch((error) => {
           alert("Creating shortcut failed. Please try again.");
           console.error("Creating shortcut failed:", error);
+        })
+        .finally(() => {
+          this.newLink = "";
         });
     },
     copyToClipboard(shortcut) {
       navigator.clipboard
         .writeText(shortcut)
         .then(() => {
-          alert("Shortcut copied to clipboard:", shortcut);
+          alert("Shortcut copied to clipboard: " + shortcut);
           console.log("Shortcut copied to clipboard");
         })
         .catch((error) => {
@@ -93,6 +89,7 @@ new Vue({
           this.links = response.data;
         })
         .catch((error) => {
+          alert("Failed to fetch user links.");
           console.error("Failed to fetch links:", error);
         });
     },
@@ -119,6 +116,8 @@ new Vue({
         this.isLoggedIn = response.data.isLoggedIn;
         if (this.isLoggedIn) {
           this.fetchLinks();
+        } else {
+          $("#loginModal").modal("show");
         }
       })
       .catch((error) => {
