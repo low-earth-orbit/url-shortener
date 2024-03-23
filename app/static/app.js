@@ -82,7 +82,7 @@ new Vue({
       navigator.clipboard
         .writeText(shortcut)
         .then(() => {
-          alert("Shortcut copied to clipboard:", shortcut);
+          alert("Shortcut copied to clipboard: " + shortcut);
           console.log("Shortcut copied to clipboard");
         })
         .catch((error) => {
