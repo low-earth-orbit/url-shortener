@@ -35,7 +35,7 @@ def is_valid_url(url):
     return validators.url(url)
 
 
-app = Flask(__name__, static_url_path='/')
+app = Flask(__name__, static_url_path='/static')
 
 CORS(app, supports_credentials=True)  # TODO: For local development only
 
