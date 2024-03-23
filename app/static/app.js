@@ -22,6 +22,7 @@ new Vue({
           )
           .then(() => {
             this.isLoggedIn = true;
+            $("#loginModal").modal("hide");
             this.fetchLinks();
             this.username = "";
           })
