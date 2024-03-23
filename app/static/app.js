@@ -54,7 +54,7 @@ new Vue({
         .post(
           "https://cs3103.cs.unb.ca:8042/user/links",
           {
-            destination: this.newLink,
+            destination: this.newLink.trim(),
           },
           { withCredentials: true }
         )
