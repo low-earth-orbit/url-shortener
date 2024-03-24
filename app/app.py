@@ -4,16 +4,11 @@ import settings  # Our server and db settings, stored in settings.py
 from flask import Flask, jsonify, abort, request, make_response, session, redirect
 from flask_restful import reqparse, Resource, Api
 from flask_session import Session
-from flask_cors import CORS
 import pymysql.cursors
 from pymysql import MySQLError
 from ldap3 import Server, Connection, ALL
 from ldap3.core.exceptions import *
-import cgitb
 import validators
-
-# import mutagen
-cgitb.enable()
 
 # Function to establish a connection with your MySQL database
 
