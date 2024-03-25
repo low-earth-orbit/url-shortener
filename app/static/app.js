@@ -54,7 +54,7 @@ new Vue({
     createLink() {
       axios
         .post(
-          "https://cs3103.cs.unb.ca:8042/user/links",
+          this.serviceURL + "/links",
           {
             destination: this.newLink.trim(),
           },
@@ -86,7 +86,7 @@ new Vue({
     },
     fetchLinks() {
       axios
-        .get(this.serviceURL + "/user/links", { withCredentials: true })
+        .get(this.serviceURL + "/links", { withCredentials: true })
         .then((response) => {
           this.links = response.data;
         })
@@ -97,7 +97,7 @@ new Vue({
     },
     deleteLink(linkId) {
       axios
-        .delete(this.serviceURL + "/user/links/" + linkId, {
+        .delete(this.serviceURL + "/links/" + linkId, {
           withCredentials: true,
         })
         .then(() => {

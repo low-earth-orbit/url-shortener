@@ -83,9 +83,9 @@ paths:
               schema:
                 type: string
                 example: "sessionId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure"
-  /users/links:
+  /links:
     get:
-      summary: Retrieves all links created by a specific user
+      summary: Retrieves user links
       tags:
         - Links
       security:
@@ -134,7 +134,7 @@ paths:
           description: Authentication required
         "500":
           description: Database or server error
-  /user/links/{linkId}:
+  /links/{linkId}:
     delete:
       summary: Deletes a specific link
       tags:

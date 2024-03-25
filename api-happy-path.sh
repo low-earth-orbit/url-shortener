@@ -19,19 +19,19 @@ curl -i -H "Content-Type: application/json" -X POST -d '{"username": "'$username
 
 # Show user links
 echo "Here is the list of link you have:"
-curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
 
 # Create shortcut for a link
 echo "Creating a new shortcut..."
-curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "'$url'"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "'$url'"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
 
 # Show user links again
 echo "Here is the list of link you have, after adding the new link:"
-curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
 
 # Extract linkId and shortcut of the created link
 echo "Retrieving linkId and shortcut of the created link..."
-links_json=$(curl -s -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links)
+links_json=$(curl -s -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links)
 link_id=$(echo "$links_json" | jq '.[-1].linkId')
 shortcut=$(echo "$links_json" | jq -r '.[-1].shortcut')
 echo "linkId: $link_id"
@@ -46,7 +46,7 @@ curl -i -H "Content-Type: application/json" -X GET -k "https://cs3103.cs.unb.ca:
 read -p "Do you want to delete the last created link? (y/n): " confirm
 if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
     echo "Deleting the link with linkId: $link_id..."
-    curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k "https://cs3103.cs.unb.ca:8042/user/links/$link_id"
+    curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k "https://cs3103.cs.unb.ca:8042/links/$link_id"
 else
     echo "The link will not be deleted."
 fi

@@ -181,7 +181,7 @@ class Logout(Resource):
 
 class UserLinks(Resource):
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+    # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
     def get(self):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -216,7 +216,7 @@ class UserLinks(Resource):
                 conn.close()
 
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "<full_url>"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+    # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "<full_url>"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
     def post(self):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -261,7 +261,7 @@ class UserLinks(Resource):
 
 class DeleteLink(Resource):
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links/<link_id>
+    # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links/<link_id>
     def delete(self, link_id):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -321,8 +321,8 @@ class GetDestination(Resource):
 # Register resources
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
-api.add_resource(UserLinks, '/user/links')
-api.add_resource(DeleteLink, '/user/links/<int:link_id>')
+api.add_resource(UserLinks, '/links')
+api.add_resource(DeleteLink, '/links/<int:link_id>')
 api.add_resource(GetDestination, '/<string:shortcut>')
 
 if __name__ == "__main__":
