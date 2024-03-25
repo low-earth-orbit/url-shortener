@@ -22,6 +22,7 @@ new Vue({
           )
           .then(() => {
             this.isLoggedIn = true;
+            localStorage.setItem("isLoggedIn", this.isLoggedIn);
             $("#loginModal").modal("hide");
             this.fetchLinks();
             this.username = "";
@@ -42,6 +43,7 @@ new Vue({
         .delete(this.serviceURL + "/logout", { withCredentials: true })
         .then(() => {
           this.isLoggedIn = false;
+          localStorage.setItem("isLoggedIn", this.isLoggedIn);
           this.links = [];
         })
         .catch((error) => {
@@ -110,10 +112,14 @@ new Vue({
     },
   },
   created() {
+    this.isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
     axios
       .get(this.serviceURL + "/check-session", { withCredentials: true })
       .then((response) => {
         this.isLoggedIn = response.data.isLoggedIn;
+        localStorage.setItem("isLoggedIn", this.isLoggedIn);
+
         if (this.isLoggedIn) {
           this.fetchLinks();
         } else {
@@ -121,8 +127,9 @@ new Vue({
         }
       })
       .catch((error) => {
-        this.isLoggedIn = false;
         console.error("Session check failed:", error);
+        this.isLoggedIn = false;
+        localStorage.setItem("isLoggedIn", "false");
       });
   },
 });
