@@ -1,21 +1,14 @@
 #!/usr/bin/env python3
-# activate_this = '/var/www/html/hhong/myenv/bin/activate_this.py'
-# exec(open(activate_this).read(), {'__file__': activate_this})
 
 import settings  # Our server and db settings, stored in settings.py
 from flask import Flask, jsonify, abort, request, make_response, session, redirect
 from flask_restful import reqparse, Resource, Api
 from flask_session import Session
-from flask_cors import CORS
 import pymysql.cursors
 from pymysql import MySQLError
 from ldap3 import Server, Connection, ALL
 from ldap3.core.exceptions import *
-import cgitb
 import validators
-
-# import mutagen
-cgitb.enable()
 
 # Function to establish a connection with your MySQL database
 
@@ -37,15 +30,11 @@ def is_valid_url(url):
 
 app = Flask(__name__, static_url_path='/static')
 
-CORS(app, supports_credentials=True)  # TODO: For local development only
-
 # Set Server-side session config: Save sessions in the local app directory.
 app.secret_key = settings.SECRET_KEY
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_NAME'] = 'peanutButter'
 app.config['SESSION_COOKIE_DOMAIN'] = settings.APP_HOST
-app.config['SESSION_COOKIE_SECURE'] = True  # TODO: For local development only
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'  # TODO: For local development only
 
 # Initialize Session
 Session(app)
@@ -192,7 +181,7 @@ class Logout(Resource):
 
 class UserLinks(Resource):
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+    # curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
     def get(self):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -227,7 +216,7 @@ class UserLinks(Resource):
                 conn.close()
 
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "<full_url>"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links
+    # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "<full_url>"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
     def post(self):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -272,7 +261,7 @@ class UserLinks(Resource):
 
 class DeleteLink(Resource):
     # Example curl command:
-    # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/user/links/<link_id>
+    # curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links/<link_id>
     def delete(self, link_id):
         if 'username' not in session:
             return make_response(jsonify({"error": "Authentication required"}), 401)
@@ -332,8 +321,8 @@ class GetDestination(Resource):
 # Register resources
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
-api.add_resource(UserLinks, '/user/links')
-api.add_resource(DeleteLink, '/user/links/<int:link_id>')
+api.add_resource(UserLinks, '/links')
+api.add_resource(DeleteLink, '/links/<int:link_id>')
 api.add_resource(GetDestination, '/<string:shortcut>')
 
 if __name__ == "__main__":

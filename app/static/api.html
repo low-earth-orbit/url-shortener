@@ -198,10 +198,10 @@
   <div class="method-summary"></div>
   <h4><a href="#Links">Links</a></h4>
   <ul>
+  <li><a href="#linksGet"><code><span class="http-method">get</span> /links</code></a></li>
+  <li><a href="#linksLinkIdDelete"><code><span class="http-method">delete</span> /links/{linkId}</code></a></li>
+  <li><a href="#linksPost"><code><span class="http-method">post</span> /links</code></a></li>
   <li><a href="#shortcutGet"><code><span class="http-method">get</span> /{shortcut}</code></a></li>
-  <li><a href="#userLinksLinkIdDelete"><code><span class="http-method">delete</span> /user/links/{linkId}</code></a></li>
-  <li><a href="#usersLinksGet"><code><span class="http-method">get</span> /users/links</code></a></li>
-  <li><a href="#usersLinksPost"><code><span class="http-method">post</span> /users/links</code></a></li>
   </ul>
   <h4><a href="#Users">Users</a></h4>
   <ul>
@@ -210,87 +210,11 @@
   </ul>
 
   <h1><a name="Links">Links</a></h1>
-  <div class="method"><a name="shortcutGet"></a>
+  <div class="method"><a name="linksGet"></a>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
-    <pre class="get"><code class="huge"><span class="http-method">get</span> /{shortcut}</code></pre></div>
-    <div class="method-summary">Retrieves the destination URL (<span class="nickname">shortcutGet</span>)</div>
-    <div class="method-notes"></div>
-
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">shortcut (required)</div>
-      
-            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
-
-
-
-
-
-
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">302</h4>
-    Redirect to the destination URL
-        <a href="#"></a>
-    <h4 class="field-label">404</h4>
-    Shortcut not found
-        <a href="#"></a>
-    <h4 class="field-label">500</h4>
-    Database error
-        <a href="#"></a>
-  </div> <!-- method -->
-  <hr/>
-  <div class="method"><a name="userLinksLinkIdDelete"></a>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /user/links/{linkId}</code></pre></div>
-    <div class="method-summary">Deletes a specific link (<span class="nickname">userLinksLinkIdDelete</span>)</div>
-    <div class="method-notes"></div>
-
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">linkId (required)</div>
-      
-            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
-
-
-
-
-    <h3 class="field-label">Query parameters</h3>
-    <div class="field-items">
-    </div>  <!-- field-items -->
-
-
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">204</h4>
-    Link deleted successfully
-        <a href="#"></a>
-    <h4 class="field-label">401</h4>
-    Authentication required
-        <a href="#"></a>
-    <h4 class="field-label">404</h4>
-    Link not found
-        <a href="#"></a>
-    <h4 class="field-label">500</h4>
-    Database error
-        <a href="#"></a>
-  </div> <!-- method -->
-  <hr/>
-  <div class="method"><a name="usersLinksGet"></a>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="get"><code class="huge"><span class="http-method">get</span> /users/links</code></pre></div>
-    <div class="method-summary">Retrieves all links created by a specific user (<span class="nickname">usersLinksGet</span>)</div>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /links</code></pre></div>
+    <div class="method-summary">Retrieves user links (<span class="nickname">linksGet</span>)</div>
     <div class="method-notes"></div>
 
 
@@ -343,11 +267,52 @@
         <a href="#"></a>
   </div> <!-- method -->
   <hr/>
-  <div class="method"><a name="usersLinksPost"></a>
+  <div class="method"><a name="linksLinkIdDelete"></a>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
-    <pre class="post"><code class="huge"><span class="http-method">post</span> /users/links</code></pre></div>
-    <div class="method-summary">Creates a new short link (<span class="nickname">usersLinksPost</span>)</div>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /links/{linkId}</code></pre></div>
+    <div class="method-summary">Deletes a specific link (<span class="nickname">linksLinkIdDelete</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">linkId (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+    </div>  <!-- field-items -->
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    Link deleted successfully
+        <a href="#"></a>
+    <h4 class="field-label">401</h4>
+    Authentication required
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Link not found
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Database error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="linksPost"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /links</code></pre></div>
+    <div class="method-summary">Creates a new short link (<span class="nickname">linksPost</span>)</div>
     <div class="method-notes"></div>
 
 
@@ -359,7 +324,7 @@
 
     <h3 class="field-label">Request body</h3>
     <div class="field-items">
-      <div class="param">body <a href="#users_links_body">users_links_body</a> (required)</div>
+      <div class="param">body <a href="#links_body">links_body</a> (required)</div>
       
             <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
                 </div>  <!-- field-items -->
@@ -406,6 +371,41 @@
         <a href="#"></a>
     <h4 class="field-label">500</h4>
     Database or server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="shortcutGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /{shortcut}</code></pre></div>
+    <div class="method-summary">Retrieves the destination URL (<span class="nickname">shortcutGet</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">shortcut (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">302</h4>
+    Redirect to the destination URL
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Shortcut not found
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Database error
         <a href="#"></a>
   </div> <!-- method -->
   <hr/>
@@ -507,8 +507,8 @@
     <li><a href="#Link"><code>Link</code></a></li>
     <li><a href="#inline_response_200"><code>inline_response_200</code></a></li>
     <li><a href="#inline_response_201"><code>inline_response_201</code></a></li>
+    <li><a href="#links_body"><code>links_body</code></a></li>
     <li><a href="#login_body"><code>login_body</code></a></li>
-    <li><a href="#users_links_body"><code>users_links_body</code></a></li>
   </ol>
 
   <div class="model">
@@ -540,18 +540,18 @@
     </div>  <!-- field-items -->
   </div>
   <div class="model">
+    <h3><a name="links_body"><code>links_body</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">destination </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: uri</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
     <h3><a name="login_body"><code>login_body</code></a> <a class="up" href="#__Models">Up</a></h3>
     
     <div class="field-items">
       <div class="param">username </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The user&#x27;s username. </div>
 <div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The user&#x27;s password. </div>
-    </div>  <!-- field-items -->
-  </div>
-  <div class="model">
-    <h3><a name="users_links_body"><code>users_links_body</code></a> <a class="up" href="#__Models">Up</a></h3>
-    
-    <div class="field-items">
-      <div class="param">destination </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  format: uri</div>
     </div>  <!-- field-items -->
   </div>
   </body>

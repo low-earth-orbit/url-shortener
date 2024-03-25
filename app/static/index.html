@@ -22,6 +22,9 @@
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔗</text></svg>"
     />
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/styles.css" />
+
     <!-- font-awesome -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -36,14 +39,14 @@
       crossorigin="anonymous"
     />
 
-    <!-- TODO: Vue development version, includes helpful console warnings -->
+    <!-- Vue development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   <body>
-    <div id="app" class="container">
+    <div id="app" class="container" v-cloak>
       <!-- Nav Bar -->
       <nav class="navbar navbar-light">
-        <a class="navbar-brand d-flex" href="#">🔗Shortify</a>
+        <a class="navbar-brand d-flex" href="">🔗Shortify</a>
         <!-- Navbar content -->
         <div class="justify-content-lg-end" id="navContent">
           <!-- Login/Logout Button -->
@@ -74,7 +77,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="loginModalTitle">🚀User Login</h5>
+              <h5 class="modal-title" id="loginModalTitle">🚀Login</h5>
               <button
                 type="button"
                 class="close"
@@ -106,7 +109,9 @@
                     required
                   />
                 </div>
-                <button type="submit" class="btn btn-primary">Log In</button>
+                <div class="text-right">
+                  <button type="submit" class="btn btn-primary">Log In</button>
+                </div>
               </form>
             </div>
           </div>
@@ -114,7 +119,7 @@
       </div>
 
       <!-- Introduction -->
-      <section class="text-center my-2 my-lg-3 my-xl-5">
+      <section class="text-center py-4 py-xl-5">
         <p class="font-weight-bold text-primary my-2">
           Proud to introduce Shortify
         </p>

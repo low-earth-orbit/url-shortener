@@ -22,6 +22,7 @@ new Vue({
           )
           .then(() => {
             this.isLoggedIn = true;
+            localStorage.setItem("isLoggedIn", this.isLoggedIn);
             $("#loginModal").modal("hide");
             this.fetchLinks();
             this.username = "";
@@ -42,6 +43,7 @@ new Vue({
         .delete(this.serviceURL + "/logout", { withCredentials: true })
         .then(() => {
           this.isLoggedIn = false;
+          localStorage.setItem("isLoggedIn", this.isLoggedIn);
           this.links = [];
         })
         .catch((error) => {
@@ -52,7 +54,7 @@ new Vue({
     createLink() {
       axios
         .post(
-          "https://cs3103.cs.unb.ca:8042/user/links",
+          this.serviceURL + "/links",
           {
             destination: this.newLink.trim(),
           },
@@ -84,7 +86,7 @@ new Vue({
     },
     fetchLinks() {
       axios
-        .get(this.serviceURL + "/user/links", { withCredentials: true })
+        .get(this.serviceURL + "/links", { withCredentials: true })
         .then((response) => {
           this.links = response.data;
         })
@@ -95,7 +97,7 @@ new Vue({
     },
     deleteLink(linkId) {
       axios
-        .delete(this.serviceURL + "/user/links/" + linkId, {
+        .delete(this.serviceURL + "/links/" + linkId, {
           withCredentials: true,
         })
         .then(() => {
@@ -110,10 +112,14 @@ new Vue({
     },
   },
   created() {
+    this.isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
     axios
       .get(this.serviceURL + "/check-session", { withCredentials: true })
       .then((response) => {
         this.isLoggedIn = response.data.isLoggedIn;
+        localStorage.setItem("isLoggedIn", this.isLoggedIn);
+
         if (this.isLoggedIn) {
           this.fetchLinks();
         } else {
@@ -121,8 +127,9 @@ new Vue({
         }
       })
       .catch((error) => {
-        this.isLoggedIn = false;
         console.error("Session check failed:", error);
+        this.isLoggedIn = false;
+        localStorage.setItem("isLoggedIn", "false");
       });
   },
 });
