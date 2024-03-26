@@ -139,16 +139,12 @@
                   type="url"
                   placeholder="Example: https://unb.ca"
                   v-model="newLink"
-                  disabled="isLoggedIn"
-                  :disabled="!isLoggedIn"
                   required
                 />
                 <div class="text-center">
                   <button
-                    class="align-items-center mt-4 fs-5 me-2 py-2 px-4"
-                    :class="{'btn btn-primary': isLoggedIn, 'btn btn-secondary': !isLoggedIn}"
+                    class="btn btn-primary align-items-center mt-4 fs-5 me-2 py-2 px-4"
                     type="submit"
-                    :disabled="!isLoggedIn"
                   >
                     Make Shortcut
                   </button>
@@ -192,7 +188,7 @@
       >
         <div class="col-md-10">
           <div class="table-responsive">
-            <table class="table table-sm table-striped">
+            <table class="table table-sm table-hover">
               <thead>
                 <tr>
                   <th scope="col">Destination</th>
@@ -234,11 +230,11 @@
     </div>
 
     <!-- Authors -->
-    <section class="bg-light py-4 py-xl-5">
+    <section class="bg-light pt-5">
       <div class="container">
         <div class="row mb-2 mb-lg-5">
-          <div class="fw-bold col-lg-6 col-md-8 mx-auto text-center">
-            <h4>Developed by</h4>
+          <div class="text-muted col-lg-6 col-md-8 mx-auto text-center">
+            Developed by
           </div>
         </div>
         <div class="row">

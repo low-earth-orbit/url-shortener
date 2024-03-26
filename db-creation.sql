@@ -8,7 +8,7 @@ CREATE TABLE links (
     link_id INT AUTO_INCREMENT PRIMARY KEY,
     destination VARCHAR(2048) NOT NULL,
     shortcut VARCHAR(6) UNIQUE NOT NULL, -- shortcut must be unique
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) DEFAULT NULL,
     FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE -- if the associated user is deleted, the link will also be deleted
 );
 
@@ -52,7 +52,7 @@ BEGIN
     END WHILE; -- This while loop in extremely rare cases could be infinite; once we decided how/where to generate shortcut, we can write more defensively.
 
     -- Insert the new link with the unique shortcut
-    INSERT INTO links(destination, shortcut, username) VALUES (_destination, _shortcut, _username);
+    INSERT INTO links(destination, shortcut, username) VALUES (_destination, _shortcut, IFNULL(_username, NULL));
     SELECT * FROM links WHERE shortcut = _shortcut; -- returns the created link
 END //
 DELIMITER ;

@@ -11,6 +11,10 @@ A registered user can
 - Delete URLs belong to the account
 - Create a short URL associated with the account by providing the destination URL
 
+An anonymous user can
+
+- Create a shortcut by providing the destination URL
+
 A user of short link can
 
 - Use the short URL to visit the long URL
@@ -21,7 +25,7 @@ This document outlines the ER diagram and the descriptions of stored procedures 
 
 ![Entity relationship diagram](./db-design-diagram.png "Entity Relationship Diagram")
 
-The database for the project consists of two database tables, `users` and `links`. The `users` table is used for storing account information of registered users. It has only one attribute: `username` as the primary key. The `links` table contains information about the URL, including `link_id`, `destination`, `shortcut` and `username` attributes. `link_id` is the primary key. `destination` is the long URL, `shortcut` is the shortened alias for the original link, also known as short link. `shortcut` needs to be unique to identify the corresponding `destination`. `destination` doesn’t have to be unique to ensure separation of each link creation. `username` is a foreign key referencing the `username` attribute in the `users` table. If the user who created the link is deleted, the link associated with the user should also be deleted, we’ll use `ON DELETE CASCADE` to achieve this.
+The database for the project consists of two database tables, `users` and `links`. The `users` table is used for storing account information of registered users. It has only one attribute: `username` as the primary key. The `links` table contains information about the URL, including `link_id`, `destination`, `shortcut` and `username` attributes. `link_id` is the primary key. `destination` is the long URL, `shortcut` is the shortened alias for the original link, also known as short link. `shortcut` needs to be unique to identify the corresponding `destination`. `destination` doesn’t have to be unique to ensure separation of each link creation. `username` is a foreign key referencing the `username` attribute in the `users` table. `username` is `NULL` by default to indicate that this link is not associated to any registered user. If the user who created the link is deleted, the link associated with the user should also be deleted, we’ll use `ON DELETE CASCADE` to achieve this.
 
 ## List of Stored Procedures
 
