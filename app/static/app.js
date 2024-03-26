@@ -23,7 +23,6 @@ new Vue({
           .then(() => {
             this.isLoggedIn = true;
             localStorage.setItem("isLoggedIn", this.isLoggedIn);
-            $("#loginModal").modal("hide");
             this.fetchLinks();
             this.username = "";
           })
@@ -122,8 +121,6 @@ new Vue({
 
         if (this.isLoggedIn) {
           this.fetchLinks();
-        } else {
-          $("#loginModal").modal("show");
         }
       })
       .catch((error) => {
