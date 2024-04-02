@@ -122,8 +122,6 @@ new Vue({
 
         if (this.isLoggedIn) {
           this.fetchLinks();
-        } else {
-          $("#loginModal").modal("show");
         }
       })
       .catch((error) => {

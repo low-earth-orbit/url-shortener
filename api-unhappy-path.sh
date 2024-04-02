@@ -54,10 +54,6 @@ curl -i -H "Content-Type: application/json" -X POST -d '{"username": "'$username
 echo "Attempting to access user links without authentication..."
 curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
 
-# Attempt to create a shortcut without being authenticated
-echo "Attempting to create a shortcut without authentication..."
-curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "https://unb.ca"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
-
 # Logout without being authenticated
 echo "Logging out without being authenticated"
 curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/logout

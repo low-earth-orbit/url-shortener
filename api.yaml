@@ -130,8 +130,6 @@ paths:
                 $ref: "#/components/schemas/Link"
         "400":
           description: Invalid input
-        "401":
-          description: Authentication required
         "500":
           description: Database or server error
   /links/{linkId}:
