@@ -1,5 +1,30 @@
 # CS3103 Term Project, Group N: URL Shortener
 
+The URL (link) shortener enables registered users to add/remove shortened URLs and anyone with the shortcut can retrieve the full URL.
+
+## User Stories
+
+A registered user can
+
+- Sign in & sign out, using the FCS LDAP server for authentication
+- View the shortcuts created by the user
+- Delete the user's shortcuts
+- Create a short URL associated with the account by providing the long URL
+
+An anonymous user can
+
+- Create a shortcut by providing the long URL
+
+Anyone with a short link can
+
+- Use the shortcut to visit the destination URL
+
+## Tech stack
+
+- Frontend: HTML, CSS, JavaScript, Bootstrap, Vue.js
+- API: OpenAPI Specification, Python, Flask
+- Database: MariaDB
+
 ## Database
 
 Database Design: [`/db-design.md`](/db-design.md)
