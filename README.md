@@ -7,13 +7,12 @@ The URL (link) shortener enables registered users to add/remove shortened URLs a
 A registered user can
 
 - Sign in & sign out, using the FCS LDAP server for authentication
-- View the shortcuts created by the user
-- Delete the user's shortcuts
-- Create a short URL by providing a long URL
+- Manage user shortcuts (view and delete)
+- Create a shortcut under this user by providing a long URL
 
 An anonymous user can
 
-- Create a shortcut by providing the long URL
+- Create a shortcut by providing a long URL
 
 Anyone with a short link can
 
