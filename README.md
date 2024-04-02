@@ -9,7 +9,7 @@ A registered user can
 - Sign in & sign out, using the FCS LDAP server for authentication
 - View the shortcuts created by the user
 - Delete the user's shortcuts
-- Create a short URL associated with the account by providing the long URL
+- Create a short URL by providing a long URL
 
 An anonymous user can
 
