@@ -54,6 +54,7 @@ def not_found(error):
 def not_found(error):
     return make_response(jsonify({"status": "Resource not found"}), 404)
 
+
 @app.route('/check-session', methods=['GET'])
 def check_session():
     if 'username' in session:
@@ -218,15 +219,12 @@ class UserLinks(Resource):
     # Example curl command:
     # curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "<full_url>"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
     def post(self):
-        if 'username' not in session:
-            return make_response(jsonify({"error": "Authentication required"}), 401)
-
         data = request.get_json()
         destination = data.get('destination')
         if not destination or not is_valid_url(destination):
             return make_response(jsonify({"error": "Invalid URL. Please try again with a valid URL."}), 400)
 
-        username = session.get('username')
+        username = session.get('username', None)  # None if not logged in
 
         conn = None
         try:

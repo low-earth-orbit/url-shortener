@@ -55,3 +55,7 @@ fi
 echo "Logging out..."
 curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://cs3103.cs.unb.ca:8042/logout
 echo "You have been logged out."
+
+# Create a shortcut without logging in
+echo "Test case: Create a shortcut without logggin in"
+curl -i -H "Content-Type: application/json" -X POST -d '{"destination": "https://unb.ca"}' -b cookie-jar -k https://cs3103.cs.unb.ca:8042/links
