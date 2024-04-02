@@ -6,18 +6,17 @@ The URL (link) shortener enables registered users to add/remove shortened URLs a
 
 A registered user can
 
-- Sign in & sign out, using FCS LDAP server for authentication
-- View the URLs associated with the account
-- Delete URLs belong to the account
-- Create a short URL associated with the account by providing the destination URL
+- Sign in & sign out, using the FCS LDAP server for authentication
+- Manage user shortcuts (view and delete)
+- Create a shortcut under this user by providing a long URL
 
 An anonymous user can
 
-- Create a shortcut by providing the destination URL
+- Create a shortcut by providing a long URL
 
-A user of short link can
+Anyone with a short link can
 
-- Use the short URL to visit the long URL
+- Use the shortcut to visit the destination URL
 
 This document outlines the ER diagram and the descriptions of stored procedures necessary for handling data in the database. We use Agile approaches to manage our project; therefore, the database design may evolve over time.
 
