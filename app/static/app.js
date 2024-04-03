@@ -53,7 +53,7 @@ new Vue({
           this.links = [];
         })
         .catch((error) => {
-          alert("Logout failed. Please try again.");
+          this.showToast("Logout failed. Please try again.", "error");
           console.error("Logout failed:", error);
         });
     },
@@ -75,8 +75,6 @@ new Vue({
             "Creating shortcut failed. Please try again.",
             "error"
           );
-
-          // alert("Creating shortcut failed. Please try again.");
           console.error("Creating shortcut failed:", error);
         })
         .finally(() => {
@@ -87,11 +85,14 @@ new Vue({
       navigator.clipboard
         .writeText(shortcut)
         .then(() => {
-          alert("Shortcut copied to clipboard.");
+          this.showToast("Shortcut copied to clipboard.", "success");
           console.log("Shortcut copied to clipboard: " + shortcut);
         })
         .catch((error) => {
-          alert("Failed to copy to clipboard. Please try again.");
+          this.showToast(
+            "Failed to copy to clipboard. Please try again.",
+            "error"
+          );
           console.error("Failed to copy to clipboard: ", error);
         });
     },
@@ -102,7 +103,7 @@ new Vue({
           this.links = response.data;
         })
         .catch((error) => {
-          alert("Failed to fetch user links.");
+          this.showToast("Failed to fetch user links.", "error");
           console.error("Failed to fetch links:", error);
         });
     },
@@ -115,8 +116,9 @@ new Vue({
           this.links = this.links.filter((link) => link.linkId !== linkId);
         })
         .catch((error) => {
-          alert(
-            "Failed to copy to clipboard. Please try again or refresh the page."
+          this.showToast(
+            "Failed to delete link. Please try again or refresh the page.",
+            "error"
           );
           console.error("Failed to delete link:", error);
         });
