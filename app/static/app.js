@@ -10,33 +10,29 @@ new Vue({
   },
   methods: {
     login() {
-      if (this.username !== "" && this.password !== "") {
-        axios
-          .post(
-            this.serviceURL + "/login",
-            {
-              username: this.username,
-              password: this.password,
-            },
-            { withCredentials: true }
-          )
-          .then(() => {
-            this.isLoggedIn = true;
-            localStorage.setItem("isLoggedIn", this.isLoggedIn);
-            $("#loginModal").modal("hide");
-            this.fetchLinks();
-            this.username = "";
-          })
-          .catch((error) => {
-            alert("Error during login. Please try again.");
-            console.log("Logout failed:", error);
-          })
-          .finally(() => {
-            this.password = "";
-          });
-      } else {
-        alert("Both username and password fields are required.");
-      }
+      axios
+        .post(
+          this.serviceURL + "/login",
+          {
+            username: this.username,
+            password: this.password,
+          },
+          { withCredentials: true }
+        )
+        .then(() => {
+          this.isLoggedIn = true;
+          localStorage.setItem("isLoggedIn", this.isLoggedIn);
+          $("#loginModal").modal("hide");
+          this.fetchLinks();
+        })
+        .catch((error) => {
+          alert("Error during login. Please try again.");
+          console.error("Logout failed:", error);
+        })
+        .finally(() => {
+          this.username = "";
+          this.password = "";
+        });
     },
     logout() {
       axios
@@ -76,12 +72,12 @@ new Vue({
       navigator.clipboard
         .writeText(shortcut)
         .then(() => {
-          alert("Shortcut copied to clipboard: " + shortcut);
-          console.log("Shortcut copied to clipboard");
+          alert("Shortcut copied to clipboard.");
+          console.log("Shortcut copied to clipboard: " + shortcut);
         })
         .catch((error) => {
           alert("Failed to copy to clipboard. Please try again.");
-          console.error("Failed to copy to clipboard", error);
+          console.error("Failed to copy to clipboard: ", error);
         });
     },
     fetchLinks() {
