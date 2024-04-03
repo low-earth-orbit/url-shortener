@@ -1,3 +1,10 @@
 [v-cloak] {
   display: none;
 }
+
+#toastContainer {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 999;
+}

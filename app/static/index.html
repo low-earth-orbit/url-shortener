@@ -111,6 +111,7 @@
                     required
                   />
                 </div>
+                <!-- Login alert if fail -->
                 <div
                   v-if="alert.show"
                   class="alert alert-dismissible fade show"
@@ -248,6 +249,9 @@
         </div>
       </section>
     </div>
+
+    <!-- Toast container for notifications -->
+    <div id="toastContainer"></div>
 
     <!-- Authors -->
     <section class="bg-light pt-5">

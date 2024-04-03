@@ -71,7 +71,12 @@ new Vue({
           this.copyToClipboard(this.serviceURL + "/" + response.data.shortcut);
         })
         .catch((error) => {
-          alert("Creating shortcut failed. Please try again.");
+          this.showToast(
+            "Creating shortcut failed. Please try again.",
+            "error"
+          );
+
+          // alert("Creating shortcut failed. Please try again.");
           console.error("Creating shortcut failed:", error);
         })
         .finally(() => {
@@ -115,6 +120,38 @@ new Vue({
           );
           console.error("Failed to delete link:", error);
         });
+    },
+    showToast(message, type) {
+      const toastContainer = document.getElementById("toastContainer");
+      const toastEl = document.createElement("div");
+      toastEl.classList.add(
+        "toast",
+        "align-items-center",
+        "text-white",
+        type === "error" ? "bg-danger" : "bg-success",
+        "border-0"
+      );
+      toastEl.role = "alert";
+      toastEl.ariaLive = "assertive";
+      toastEl.ariaAtomic = "true";
+      toastEl.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="mr-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    `;
+
+      toastContainer.appendChild(toastEl);
+
+      const toast = new bootstrap.Toast(toastEl, {
+        autohide: true,
+        delay: 3000,
+      });
+      toast.show();
     },
   },
   created() {
