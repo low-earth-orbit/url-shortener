@@ -37,7 +37,7 @@ new Vue({
           this.alert.show = true;
           this.alert.message = "Error during login. Please try again.";
           this.alert.type = "danger";
-          console.error("Login failed:", error);
+          console.error("Login failed: ", error);
         })
         .finally(() => {
           this.username = "";
@@ -54,7 +54,7 @@ new Vue({
         })
         .catch((error) => {
           this.showToast("Logout failed. Please try again.", "error");
-          console.error("Logout failed:", error);
+          console.error("Logout failed: ", error);
         });
     },
     createLink() {
@@ -75,7 +75,7 @@ new Vue({
             "Creating shortcut failed. Please try again.",
             "error"
           );
-          console.error("Creating shortcut failed:", error);
+          console.error("Creating shortcut failed: ", error);
         })
         .finally(() => {
           this.newLink = "";
@@ -104,7 +104,7 @@ new Vue({
         })
         .catch((error) => {
           this.showToast("Failed to fetch user links.", "error");
-          console.error("Failed to fetch links:", error);
+          console.error("Failed to fetch links: ", error);
         });
     },
     deleteLink(linkId) {
@@ -114,13 +114,14 @@ new Vue({
         })
         .then(() => {
           this.links = this.links.filter((link) => link.linkId !== linkId);
+          this.showToast("Shortcut deleted.", "success");
         })
         .catch((error) => {
           this.showToast(
             "Failed to delete link. Please try again or refresh the page.",
             "error"
           );
-          console.error("Failed to delete link:", error);
+          console.error("Failed to delete link: ", error);
         });
     },
     showToast(message, type) {
@@ -170,7 +171,7 @@ new Vue({
         }
       })
       .catch((error) => {
-        console.error("Session check failed:", error);
+        console.error("Session check failed: ", error);
         this.isLoggedIn = false;
         localStorage.setItem("isLoggedIn", "false");
       });
