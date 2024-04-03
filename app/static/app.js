@@ -7,6 +7,11 @@ new Vue({
     isLoggedIn: false,
     newLink: "",
     links: [],
+    alert: {
+      show: false,
+      message: "",
+      type: "danger",
+    },
   },
   methods: {
     login() {
@@ -24,10 +29,15 @@ new Vue({
           localStorage.setItem("isLoggedIn", this.isLoggedIn);
           $("#loginModal").modal("hide");
           this.fetchLinks();
+          // Reset alert
+          this.alert.show = false;
         })
         .catch((error) => {
-          alert("Error during login. Please try again.");
-          console.error("Logout failed:", error);
+          // Set alert
+          this.alert.show = true;
+          this.alert.message = "Error during login. Please try again.";
+          this.alert.type = "danger";
+          console.error("Login failed:", error);
         })
         .finally(() => {
           this.username = "";
