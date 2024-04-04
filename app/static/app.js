@@ -67,7 +67,9 @@ new Vue({
           { withCredentials: true }
         )
         .then((response) => {
-          this.links.push(response.data);
+          if (this.isLoggedIn) {
+            this.links.push(response.data);
+          }
           this.copyToClipboard(this.serviceURL + "/" + response.data.shortcut);
         })
         .catch((error) => {
