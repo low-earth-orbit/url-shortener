@@ -7,36 +7,42 @@ new Vue({
     isLoggedIn: false,
     newLink: "",
     links: [],
+    alert: {
+      show: false,
+      message: "",
+      type: "danger",
+    },
   },
   methods: {
     login() {
-      if (this.username !== "" && this.password !== "") {
-        axios
-          .post(
-            this.serviceURL + "/login",
-            {
-              username: this.username,
-              password: this.password,
-            },
-            { withCredentials: true }
-          )
-          .then(() => {
-            this.isLoggedIn = true;
-            localStorage.setItem("isLoggedIn", this.isLoggedIn);
-            $("#loginModal").modal("hide");
-            this.fetchLinks();
-            this.username = "";
-          })
-          .catch((error) => {
-            alert("Error during login. Please try again.");
-            console.log("Logout failed:", error);
-          })
-          .finally(() => {
-            this.password = "";
-          });
-      } else {
-        alert("Both username and password fields are required.");
-      }
+      axios
+        .post(
+          this.serviceURL + "/login",
+          {
+            username: this.username,
+            password: this.password,
+          },
+          { withCredentials: true }
+        )
+        .then(() => {
+          this.isLoggedIn = true;
+          localStorage.setItem("isLoggedIn", this.isLoggedIn);
+          $("#loginModal").modal("hide");
+          this.fetchLinks();
+          // Reset alert
+          this.alert.show = false;
+        })
+        .catch((error) => {
+          // Set alert
+          this.alert.show = true;
+          this.alert.message = "Error during login. Please try again.";
+          this.alert.type = "danger";
+          console.error("Login failed: ", error);
+        })
+        .finally(() => {
+          this.username = "";
+          this.password = "";
+        });
     },
     logout() {
       axios
@@ -47,8 +53,8 @@ new Vue({
           this.links = [];
         })
         .catch((error) => {
-          alert("Logout failed. Please try again.");
-          console.error("Logout failed:", error);
+          this.showToast("Logout failed. Please try again.", "error");
+          console.error("Logout failed: ", error);
         });
     },
     createLink() {
@@ -65,8 +71,11 @@ new Vue({
           this.copyToClipboard(this.serviceURL + "/" + response.data.shortcut);
         })
         .catch((error) => {
-          alert("Creating shortcut failed. Please try again.");
-          console.error("Creating shortcut failed:", error);
+          this.showToast(
+            "Creating shortcut failed. Please try again.",
+            "error"
+          );
+          console.error("Creating shortcut failed: ", error);
         })
         .finally(() => {
           this.newLink = "";
@@ -76,12 +85,15 @@ new Vue({
       navigator.clipboard
         .writeText(shortcut)
         .then(() => {
-          alert("Shortcut copied to clipboard: " + shortcut);
-          console.log("Shortcut copied to clipboard");
+          this.showToast("Shortcut copied to clipboard.", "success");
+          console.log("Shortcut copied to clipboard: " + shortcut);
         })
         .catch((error) => {
-          alert("Failed to copy to clipboard. Please try again.");
-          console.error("Failed to copy to clipboard", error);
+          this.showToast(
+            "Failed to copy to clipboard. Please try again.",
+            "error"
+          );
+          console.error("Failed to copy to clipboard: ", error);
         });
     },
     fetchLinks() {
@@ -91,8 +103,8 @@ new Vue({
           this.links = response.data;
         })
         .catch((error) => {
-          alert("Failed to fetch user links.");
-          console.error("Failed to fetch links:", error);
+          this.showToast("Failed to fetch user links.", "error");
+          console.error("Failed to fetch links: ", error);
         });
     },
     deleteLink(linkId) {
@@ -102,13 +114,47 @@ new Vue({
         })
         .then(() => {
           this.links = this.links.filter((link) => link.linkId !== linkId);
+          this.showToast("Shortcut deleted.", "success");
         })
         .catch((error) => {
-          alert(
-            "Failed to copy to clipboard. Please try again or refresh the page."
+          this.showToast(
+            "Failed to delete link. Please try again or refresh the page.",
+            "error"
           );
-          console.error("Failed to delete link:", error);
+          console.error("Failed to delete link: ", error);
         });
+    },
+    showToast(message, type) {
+      const toastContainer = document.getElementById("toastContainer");
+      const toastEl = document.createElement("div");
+      toastEl.classList.add(
+        "toast",
+        "align-items-center",
+        "text-white",
+        type === "error" ? "bg-danger" : "bg-success",
+        "border-0"
+      );
+      toastEl.role = "alert";
+      toastEl.ariaLive = "assertive";
+      toastEl.ariaAtomic = "true";
+      toastEl.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="mr-2 mb-1 text-white close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    `;
+
+      toastContainer.appendChild(toastEl);
+
+      const toast = new bootstrap.Toast(toastEl, {
+        autohide: true,
+        delay: 3000,
+      });
+      toast.show();
     },
   },
   created() {
@@ -125,7 +171,7 @@ new Vue({
         }
       })
       .catch((error) => {
-        console.error("Session check failed:", error);
+        console.error("Session check failed: ", error);
         this.isLoggedIn = false;
         localStorage.setItem("isLoggedIn", "false");
       });

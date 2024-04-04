@@ -43,9 +43,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   <body>
-    <div id="app" class="container mb-5" v-cloak>
+    <div id="app" v-cloak>
       <!-- Nav Bar -->
-      <nav class="navbar navbar-light">
+      <nav class="container navbar navbar-light">
         <a class="navbar-brand d-flex" href="">🔗Shortify</a>
         <!-- Navbar content -->
         <div class="justify-content-lg-end" id="navContent">
@@ -77,7 +77,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="loginModalTitle">🚀Login</h5>
+              <h5 class="modal-title" id="loginModalTitle">Login</h5>
               <button
                 type="button"
                 class="close"
@@ -96,6 +96,7 @@
                     class="form-control"
                     id="username"
                     v-model="username"
+                    autocomplete="username"
                     required
                   />
                 </div>
@@ -106,8 +107,26 @@
                     class="form-control"
                     id="password"
                     v-model="password"
+                    autocomplete="current-password"
                     required
                   />
+                </div>
+                <!-- Login alert if fail -->
+                <div
+                  v-if="alert.show"
+                  class="alert alert-dismissible fade show"
+                  :class="'alert-' + alert.type"
+                  role="alert"
+                >
+                  {{ alert.message }}
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
                 <div class="text-right">
                   <button type="submit" class="btn btn-primary">Log In</button>
@@ -119,7 +138,7 @@
       </div>
 
       <!-- Introduction -->
-      <section class="text-center py-4 py-xl-5">
+      <section class="container text-center py-4 py-xl-5">
         <p class="font-weight-bold text-primary my-2">
           Proud to introduce Shortify
         </p>
@@ -127,30 +146,30 @@
       </section>
 
       <!-- URL Shortening Form -->
-      <section class="py-4 py-xl-5">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-md-8">
-              <form class="text-start" @submit.prevent="createLink">
-                <label class="form-label font-weight-bold"
-                  >Shorten a long URL</label
-                ><input
-                  class="form-control"
-                  type="url"
-                  placeholder="Example: https://unb.ca"
-                  v-model="newLink"
-                  required
-                />
-                <div class="text-center">
-                  <button
-                    class="btn btn-primary align-items-center mt-4 fs-5 me-2 py-2 px-4"
-                    type="submit"
-                  >
-                    Make Shortcut
-                  </button>
-                </div>
-              </form>
-            </div>
+      <section class="container py-4 py-xl-5">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <form class="text-start" @submit.prevent="createLink">
+              <label class="form-label font-weight-bold" for="urlInput"
+                >Shorten a long URL</label
+              ><input
+                id="urlInput"
+                class="form-control"
+                type="url"
+                placeholder="Example: https://unb.ca"
+                v-model="newLink"
+                autocomplete="url"
+                required
+              />
+              <div class="text-center">
+                <button
+                  class="btn btn-primary align-items-center mt-4 fs-5 me-2 py-2 px-4"
+                  type="submit"
+                >
+                  Make Shortcut
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </section>
@@ -184,11 +203,11 @@
       <!-- List of links -->
       <section
         v-if="isLoggedIn && links.length > 0"
-        class="row justify-content-center my-2 my-lg-3 my-xl-5"
+        class="row justify-content-center"
       >
-        <div class="col-md-10">
+        <div class="container py-4 py-xl-5">
           <div class="table-responsive">
-            <table class="table table-sm table-hover">
+            <table id="linksTable" class="table table-sm table-hover">
               <thead>
                 <tr>
                   <th scope="col">Destination</th>
@@ -227,117 +246,120 @@
           </div>
         </div>
       </section>
-    </div>
 
-    <!-- Authors -->
-    <section class="bg-light pt-5">
-      <div class="container">
-        <div class="row mb-2 mb-lg-5">
-          <div class="text-muted col-lg-6 col-md-8 mx-auto text-center">
-            Developed by
+      <!-- Toast container for notifications -->
+      <div id="toastContainer"></div>
+
+      <!-- Authors -->
+      <section class="bg-light mt-5 py-4 py-xl-5">
+        <div class="container">
+          <div class="row mb-2 mb-lg-5">
+            <div class="text-muted col-lg-6 col-md-8 mx-auto text-center">
+              Developed by
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6 col-md-8 mx-auto">
-            <div class="row">
-              <!-- Leo Card -->
-              <div class="col text-center">
-                <div class="card bg-light border-0 shadow-none">
-                  <div
-                    class="card-body d-flex flex-column align-items-center p-0"
-                  >
-                    <img
-                      class="rounded-circle mb-3 fit-cover"
-                      width="120"
-                      height="120"
-                      src="static/leo-avatar.png"
-                    />
-                    <h5 class="fw-bold text-primary card-title mb-0">
-                      <strong>Leo Hong</strong>
-                    </h5>
-                    <p class="text-muted card-text mb-2">Noob</p>
-                    <ul class="list-inline fs-6 text-muted mb-0">
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://www.linkedin.com/in/leo-hong/"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="LinkedIn"
-                        >
-                          <i class="fa-brands fa-linkedin"></i>
-                        </a>
-                      </li>
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://github.com/low-earth-orbit"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="GitHub"
-                        >
-                          <i class="fa-brands fa-github"></i>
-                        </a>
-                      </li>
-                    </ul>
+          <div class="row">
+            <div class="col-lg-6 col-md-8 mx-auto">
+              <div class="row">
+                <!-- Leo Card -->
+                <div class="col text-center">
+                  <div class="card bg-light border-0 shadow-none">
+                    <div
+                      class="card-body d-flex flex-column align-items-center p-0"
+                    >
+                      <img
+                        class="rounded-circle mb-3 fit-cover"
+                        width="120"
+                        height="120"
+                        src="static/leo-avatar.png"
+                      />
+                      <h5 class="fw-bold text-primary card-title mb-0">
+                        <strong>Leo Hong</strong>
+                      </h5>
+                      <p class="text-muted card-text mb-2">A nice guy</p>
+                      <ul class="list-inline fs-6 text-muted mb-0">
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://www.linkedin.com/in/leo-hong/"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="LinkedIn"
+                          >
+                            <i class="fa-brands fa-linkedin"></i>
+                          </a>
+                        </li>
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://github.com/low-earth-orbit"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="GitHub"
+                          >
+                            <i class="fa-brands fa-github"></i>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <!-- Anh Card -->
-              <div class="col text-center">
-                <div class="card bg-light border-0 shadow-none">
-                  <div
-                    class="card-body d-flex flex-column align-items-center p-0"
-                  >
-                    <img
-                      class="rounded-circle mb-3 fit-cover"
-                      width="120"
-                      height="120"
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWMUCCddaAiNqZ6mBfh-SJPa-IcblXc9MRwKSXBg6rjw&s"
-                    />
-                    <h5 class="fw-bold text-primary card-title mb-0">
-                      <strong>Anh Tran</strong>
-                    </h5>
-                    <p class="text-muted card-text mb-2">A normal guy</p>
-                    <ul class="list-inline fs-6 text-muted mb-0">
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://www.linkedin.com/in/anh-tran-65ab2a189/"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="LinkedIn"
-                        >
-                          <i class="fa-brands fa-linkedin"></i>
-                        </a>
-                      </li>
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://github.com/ATarchrive21221"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="GitHub"
-                        >
-                          <i class="fa-brands fa-github"></i>
-                        </a>
-                      </li>
-                    </ul>
+                <!-- Anh Card -->
+                <div class="col text-center">
+                  <div class="card bg-light border-0 shadow-none">
+                    <div
+                      class="card-body d-flex flex-column align-items-center p-0"
+                    >
+                      <img
+                        class="rounded-circle mb-3 fit-cover"
+                        width="120"
+                        height="120"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWMUCCddaAiNqZ6mBfh-SJPa-IcblXc9MRwKSXBg6rjw&s"
+                      />
+                      <h5 class="fw-bold text-primary card-title mb-0">
+                        <strong>Anh Tran</strong>
+                      </h5>
+                      <p class="text-muted card-text mb-2">A normal guy</p>
+                      <ul class="list-inline fs-6 text-muted mb-0">
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://www.linkedin.com/in/anh-tran-65ab2a189/"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="LinkedIn"
+                          >
+                            <i class="fa-brands fa-linkedin"></i>
+                          </a>
+                        </li>
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://github.com/ATarchrive21221"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="GitHub"
+                          >
+                            <i class="fa-brands fa-github"></i>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <footer class="bg-light py-4 py-xl-5">
-      <!--Copyright-->
-      <div class="text-center text-muted">
-        Copyright © 2024 Anh & Leo. All rights reserved.
-      </div>
-    </footer>
+      <footer class="bg-light pb-2">
+        <!--Copyright-->
+        <div class="text-center text-muted">
+          Copyright © 2024 Anh & Leo. All rights reserved.
+        </div>
+      </footer>
+    </div>
 
     <!-- Include Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
