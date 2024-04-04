@@ -203,11 +203,11 @@
       <!-- List of links -->
       <section
         v-if="isLoggedIn && links.length > 0"
-        class="row justify-content-center my-2 my-lg-3 my-xl-5"
+        class="row justify-content-center"
       >
-        <div class="container">
+        <div class="container py-4 py-xl-5">
           <div class="table-responsive">
-            <table class="table table-sm table-hover">
+            <table id="linksTable" class="table table-sm table-hover">
               <thead>
                 <tr>
                   <th scope="col">Destination</th>
@@ -251,98 +251,100 @@
       <div id="toastContainer"></div>
 
       <!-- Authors -->
-      <section class="bg-light pt-5 authors-container">
-        <div class="row mb-2 mb-lg-5">
-          <div class="text-muted col-lg-6 col-md-8 mx-auto text-center">
-            Developed by
+      <section class="bg-light mt-5 py-4 py-xl-5">
+        <div class="container">
+          <div class="row mb-2 mb-lg-5">
+            <div class="text-muted col-lg-6 col-md-8 mx-auto text-center">
+              Developed by
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6 col-md-8 mx-auto">
-            <div class="row">
-              <!-- Leo Card -->
-              <div class="col text-center">
-                <div class="card bg-light border-0 shadow-none">
-                  <div
-                    class="card-body d-flex flex-column align-items-center p-0"
-                  >
-                    <img
-                      class="rounded-circle mb-3 fit-cover"
-                      width="120"
-                      height="120"
-                      src="static/leo-avatar.png"
-                    />
-                    <h5 class="fw-bold text-primary card-title mb-0">
-                      <strong>Leo Hong</strong>
-                    </h5>
-                    <p class="text-muted card-text mb-2">Noob</p>
-                    <ul class="list-inline fs-6 text-muted mb-0">
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://www.linkedin.com/in/leo-hong/"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="LinkedIn"
-                        >
-                          <i class="fa-brands fa-linkedin"></i>
-                        </a>
-                      </li>
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://github.com/low-earth-orbit"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="GitHub"
-                        >
-                          <i class="fa-brands fa-github"></i>
-                        </a>
-                      </li>
-                    </ul>
+          <div class="row">
+            <div class="col-lg-6 col-md-8 mx-auto">
+              <div class="row">
+                <!-- Leo Card -->
+                <div class="col text-center">
+                  <div class="card bg-light border-0 shadow-none">
+                    <div
+                      class="card-body d-flex flex-column align-items-center p-0"
+                    >
+                      <img
+                        class="rounded-circle mb-3 fit-cover"
+                        width="120"
+                        height="120"
+                        src="static/leo-avatar.png"
+                      />
+                      <h5 class="fw-bold text-primary card-title mb-0">
+                        <strong>Leo Hong</strong>
+                      </h5>
+                      <p class="text-muted card-text mb-2">A nice guy</p>
+                      <ul class="list-inline fs-6 text-muted mb-0">
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://www.linkedin.com/in/leo-hong/"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="LinkedIn"
+                          >
+                            <i class="fa-brands fa-linkedin"></i>
+                          </a>
+                        </li>
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://github.com/low-earth-orbit"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="GitHub"
+                          >
+                            <i class="fa-brands fa-github"></i>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <!-- Anh Card -->
-              <div class="col text-center">
-                <div class="card bg-light border-0 shadow-none">
-                  <div
-                    class="card-body d-flex flex-column align-items-center p-0"
-                  >
-                    <img
-                      class="rounded-circle mb-3 fit-cover"
-                      width="120"
-                      height="120"
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWMUCCddaAiNqZ6mBfh-SJPa-IcblXc9MRwKSXBg6rjw&s"
-                    />
-                    <h5 class="fw-bold text-primary card-title mb-0">
-                      <strong>Anh Tran</strong>
-                    </h5>
-                    <p class="text-muted card-text mb-2">A normal guy</p>
-                    <ul class="list-inline fs-6 text-muted mb-0">
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://www.linkedin.com/in/anh-tran-65ab2a189/"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="LinkedIn"
-                        >
-                          <i class="fa-brands fa-linkedin"></i>
-                        </a>
-                      </li>
-                      <li class="list-inline-item text-center">
-                        <a
-                          href="https://github.com/ATarchrive21221"
-                          target="_blank"
-                          class="text-muted"
-                          rel="noopener noreferrer"
-                          title="GitHub"
-                        >
-                          <i class="fa-brands fa-github"></i>
-                        </a>
-                      </li>
-                    </ul>
+                <!-- Anh Card -->
+                <div class="col text-center">
+                  <div class="card bg-light border-0 shadow-none">
+                    <div
+                      class="card-body d-flex flex-column align-items-center p-0"
+                    >
+                      <img
+                        class="rounded-circle mb-3 fit-cover"
+                        width="120"
+                        height="120"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWMUCCddaAiNqZ6mBfh-SJPa-IcblXc9MRwKSXBg6rjw&s"
+                      />
+                      <h5 class="fw-bold text-primary card-title mb-0">
+                        <strong>Anh Tran</strong>
+                      </h5>
+                      <p class="text-muted card-text mb-2">A normal guy</p>
+                      <ul class="list-inline fs-6 text-muted mb-0">
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://www.linkedin.com/in/anh-tran-65ab2a189/"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="LinkedIn"
+                          >
+                            <i class="fa-brands fa-linkedin"></i>
+                          </a>
+                        </li>
+                        <li class="list-inline-item text-center">
+                          <a
+                            href="https://github.com/ATarchrive21221"
+                            target="_blank"
+                            class="text-muted"
+                            rel="noopener noreferrer"
+                            title="GitHub"
+                          >
+                            <i class="fa-brands fa-github"></i>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -351,7 +353,7 @@
         </div>
       </section>
 
-      <footer class="bg-light py-4 py-xl-5">
+      <footer class="bg-light pb-2">
         <!--Copyright-->
         <div class="text-center text-muted">
           Copyright © 2024 Anh & Leo. All rights reserved.

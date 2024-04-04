@@ -1,10 +1,17 @@
+/* Fix flashing in Vue.js */
 [v-cloak] {
   display: none;
 }
 
+/* Toast notification position */
 #toastContainer {
   position: fixed;
   bottom: 1rem;
   right: 1rem;
   z-index: 999;
+}
+
+/* Modify links table heading */
+th {
+  font-weight: normal;
 }
