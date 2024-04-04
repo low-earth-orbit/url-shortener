@@ -43,9 +43,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   <body>
-    <div id="app" class="container mb-5" v-cloak>
+    <div id="app" v-cloak>
       <!-- Nav Bar -->
-      <nav class="navbar navbar-light">
+      <nav class="container navbar navbar-light">
         <a class="navbar-brand d-flex" href="">🔗Shortify</a>
         <!-- Navbar content -->
         <div class="justify-content-lg-end" id="navContent">
@@ -138,7 +138,7 @@
       </div>
 
       <!-- Introduction -->
-      <section class="text-center py-4 py-xl-5">
+      <section class="container text-center py-4 py-xl-5">
         <p class="font-weight-bold text-primary my-2">
           Proud to introduce Shortify
         </p>
@@ -146,32 +146,30 @@
       </section>
 
       <!-- URL Shortening Form -->
-      <section class="py-4 py-xl-5">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-md-8">
-              <form class="text-start" @submit.prevent="createLink">
-                <label class="form-label font-weight-bold" for="urlInput"
-                  >Shorten a long URL</label
-                ><input
-                  id="urlInput"
-                  class="form-control"
-                  type="url"
-                  placeholder="Example: https://unb.ca"
-                  v-model="newLink"
-                  autocomplete="url"
-                  required
-                />
-                <div class="text-center">
-                  <button
-                    class="btn btn-primary align-items-center mt-4 fs-5 me-2 py-2 px-4"
-                    type="submit"
-                  >
-                    Make Shortcut
-                  </button>
-                </div>
-              </form>
-            </div>
+      <section class="container py-4 py-xl-5">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <form class="text-start" @submit.prevent="createLink">
+              <label class="form-label font-weight-bold" for="urlInput"
+                >Shorten a long URL</label
+              ><input
+                id="urlInput"
+                class="form-control"
+                type="url"
+                placeholder="Example: https://unb.ca"
+                v-model="newLink"
+                autocomplete="url"
+                required
+              />
+              <div class="text-center">
+                <button
+                  class="btn btn-primary align-items-center mt-4 fs-5 me-2 py-2 px-4"
+                  type="submit"
+                >
+                  Make Shortcut
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </section>
@@ -207,7 +205,7 @@
         v-if="isLoggedIn && links.length > 0"
         class="row justify-content-center my-2 my-lg-3 my-xl-5"
       >
-        <div class="col-md-10">
+        <div class="container">
           <div class="table-responsive">
             <table class="table table-sm table-hover">
               <thead>
@@ -248,14 +246,12 @@
           </div>
         </div>
       </section>
-    </div>
 
-    <!-- Toast container for notifications -->
-    <div id="toastContainer"></div>
+      <!-- Toast container for notifications -->
+      <div id="toastContainer"></div>
 
-    <!-- Authors -->
-    <section class="bg-light pt-5">
-      <div class="container">
+      <!-- Authors -->
+      <section class="bg-light pt-5 authors-container">
         <div class="row mb-2 mb-lg-5">
           <div class="text-muted col-lg-6 col-md-8 mx-auto text-center">
             Developed by
@@ -353,15 +349,15 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <footer class="bg-light py-4 py-xl-5">
-      <!--Copyright-->
-      <div class="text-center text-muted">
-        Copyright © 2024 Anh & Leo. All rights reserved.
-      </div>
-    </footer>
+      <footer class="bg-light py-4 py-xl-5">
+        <!--Copyright-->
+        <div class="text-center text-muted">
+          Copyright © 2024 Anh & Leo. All rights reserved.
+        </div>
+      </footer>
+    </div>
 
     <!-- Include Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

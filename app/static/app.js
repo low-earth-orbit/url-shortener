@@ -142,7 +142,7 @@ new Vue({
         <div class="toast-body">
           ${message}
         </div>
-        <button type="button" class="mr-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <button type="button" class="mr-2 mb-1 text-white close" data-dismiss="toast" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
