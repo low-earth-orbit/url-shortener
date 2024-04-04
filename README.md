@@ -2,6 +2,16 @@
 
 The URL (link) shortener enables registered users to add/remove shortened URLs and anyone with the shortcut can retrieve the full URL.
 
+## Tech stack
+
+- Frontend: HTML, CSS, JavaScript, Bootstrap, Vue.js
+- API: OpenAPI Specification, Python, Flask
+- Database: MariaDB
+
+## UI
+
+![UI](/ui.png "User interface of the app")
+
 ## User Stories
 
 A registered user can
@@ -18,19 +28,11 @@ Anyone with a short link can
 
 - Use the shortcut to visit the destination URL
 
-## Tech stack
-
-- Frontend: HTML, CSS, JavaScript, Bootstrap, Vue.js
-- API: OpenAPI Specification, Python, Flask
-- Database: MariaDB
-
-## Database
+## File References
 
 Database Design: [`/db-design.md`](/db-design.md)
 
 SQL scripts: [`/db-creation.sql`](/db-creation.sql)
-
-## API
 
 API doc (webpage): [`/app/static/api.html`](/app/static/api.html)
 
@@ -40,10 +42,8 @@ Happy path tests: [`/api-happy-path.sh`](/api-happy-path.sh)
 
 Unhappy path tests: [`/api-unhappy-path.sh`](/api-unhappy-path.sh)
 
+App folder: [`/app`](/app)
+
 API server: [`/app/app.py`](/app/app.py)
 
-## Front end
-
 Static file directory: [`/app/static`](/app/static)
-
-Index page: [`/app/static/index.html`](/app/static/index.html)
