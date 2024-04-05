@@ -160,7 +160,7 @@ new Vue({
 
       const toast = new bootstrap.Toast(toastEl, {
         autohide: true,
-        delay: 3000,
+        delay: 5000,
       });
       toast.show();
     },
