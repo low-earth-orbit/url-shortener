@@ -175,7 +175,7 @@
       </section>
 
       <!-- Click to act -->
-      <div class="container py-4 py-xl-5" v-if="!isLoggedIn">
+      <section class="container py-4 py-xl-5" v-if="!isLoggedIn">
         <div
           class="text-white bg-primary border rounded border-0 border-primary d-flex flex-column justify-content-between flex-lg-row p-4 p-md-5"
         >
@@ -198,14 +198,14 @@
             >
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- Link table -->
       <section
+        class="container py-4 py-xl-5"
         v-if="isLoggedIn && links.length > 0"
-        class="row justify-content-center"
       >
-        <div class="container py-4 py-xl-5">
+        <div class="row justify-content-center">
           <div class="table-responsive">
             <table id="linksTable" class="table table-sm table-hover">
               <thead>
@@ -247,7 +247,7 @@
         </div>
       </section>
 
-      <!-- Toast container for notifications -->
+      <!-- Toast container -->
       <div id="toastContainer"></div>
 
       <!-- Authors -->

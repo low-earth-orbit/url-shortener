@@ -11,11 +11,7 @@
   z-index: 999;
 }
 
-/* Links table */
-th {
-  font-weight: normal;
-}
-
+/* Link table */
 td {
   overflow-wrap: anywhere;
 }
