@@ -200,7 +200,7 @@
         </div>
       </div>
 
-      <!-- List of links -->
+      <!-- Link table -->
       <section
         v-if="isLoggedIn && links.length > 0"
         class="row justify-content-center"
@@ -210,21 +210,21 @@
             <table id="linksTable" class="table table-sm table-hover">
               <thead>
                 <tr>
-                  <th scope="col">Destination</th>
-                  <th scope="col">Shortcut</th>
-                  <th scope="col">Copy</th>
-                  <th scope="col">Delete</th>
+                  <th scope="col" class="w-75">Destination</th>
+                  <th scope="col" class="text-center">Shortcut</th>
+                  <th scope="col" class="text-center">Copy</th>
+                  <th scope="col" class="text-center">Delete</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="link in links" :key="link.linkId">
-                  <td>{{ link.destination }}</td>
-                  <td>
+                  <td class="w-75">{{ link.destination }}</td>
+                  <td class="text-center">
                     <a :href="serviceURL + '/' + link.shortcut" target="_blank"
                       >{{ link.shortcut }}</a
                     >
                   </td>
-                  <td>
+                  <td class="text-center">
                     <button
                       @click="copyToClipboard(serviceURL + '/' + link.shortcut)"
                       class="btn btn-secondary btn-sm"
@@ -232,7 +232,7 @@
                       <i class="fa-regular fa-copy"></i>
                     </button>
                   </td>
-                  <td>
+                  <td class="text-center">
                     <button
                       @click="deleteLink(link.linkId)"
                       class="btn btn-danger btn-sm"
