@@ -58,11 +58,17 @@ new Vue({
         });
     },
     createLink() {
+      let destination = this.newLink.trim();
+
+      if (!/^(?:f|ht)tps?\:\/\//.test(destination)) {
+        destination = "https://" + destination;
+      }
+
       axios
         .post(
           this.serviceURL + "/links",
           {
-            destination: this.newLink.trim(),
+            destination: destination,
           },
           { withCredentials: true }
         )
@@ -140,15 +146,15 @@ new Vue({
       toastEl.ariaLive = "assertive";
       toastEl.ariaAtomic = "true";
       toastEl.innerHTML = `
-      <div class="d-flex">
-        <div class="toast-body">
-          ${message}
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="mr-2 mb-1 text-white close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <button type="button" class="mr-2 mb-1 text-white close" data-dismiss="toast" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    `;
+      `;
 
       toastContainer.appendChild(toastEl);
 
